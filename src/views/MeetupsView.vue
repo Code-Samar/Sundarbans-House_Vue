@@ -177,30 +177,35 @@ const members = [
   {
     rank: '🥇', rankClass: 'rank-1',
     name: 'Rushabh Kapse', city: 'Mumbai', points: '1,400', badge: '🔥 Top Contributor',
-    img: 'src=@/assets/teams/rushabh.jpg',
+    img: '@/assets/teams/rushabh.jpg',
   },
   {
     rank: '🥈', rankClass: 'rank-2',
-    name: 'Priya Patel', city: 'Bangalore', points: '3,950', badge: '⭐ Helper',
+    name: 'Nivash Kumar', city: 'Patna', points: '1,000', badge: '⭐ Helper',
     img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&auto=format&fit=crop&crop=face',
   },
   {
     rank: '🥉', rankClass: 'rank-3',
-    name: 'Rahul Gupta', city: 'Mumbai', points: '3,720', badge: '📚 Academician',
+    name: 'Divya Prakash', city: 'Delhi NCR', points: '1,000', badge: '📚 Academician',
     img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80&auto=format&fit=crop&crop=face',
   },
   {
     rank: '4', rankClass: '',
-    name: 'Sneha Iyer', city: 'Chennai', points: '3,410', badge: '🎯 Event Pro', initial: 'S',
+    name: 'AAkash Rawal', city: 'Chandigarh', points: '900', badge: '🎯 Event Pro', initial: 'S',
   },
   {
     rank: '5', rankClass: '',
-    name: 'Vivek Menon', city: 'Hyderabad', points: '3,180', badge: '💡 Innovator', initial: 'V',
-  },
+    name: 'Chandan Saw', city: 'Kolkata', points: '700', badge: '💡 Innovator', initial: 'V',
+
   {
     rank: '6', rankClass: '',
-    name: 'Anjali Rao', city: 'Pune', points: '2,990', badge: '🤝 Community Builder', initial: 'A',
+    name: 'Dishi Gupta', city: 'Hyderabad', points: '400', badge: '🤝 Community Builder', initial: 'A',
   },
+  {
+    rank: '7', rankClass: '',
+    name: 'R Sai Sahanaa', city: 'Chennai', points: '100', badge: '🤝 Community Builder', initial: 'A',
+  },
+  
 ]
 </script>
 
