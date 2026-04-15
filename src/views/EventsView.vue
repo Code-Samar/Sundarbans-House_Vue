@@ -324,6 +324,104 @@ const filteredEvents = computed(() =>
 );
 
 const pastEvents = [
+
+  {
+    title: "Paradox Champions League — Football Faceoff",
+    category: "Sports",
+    desc: "High-energy football tournament at Paradox'25 — strategy, skill and spirit on the field",
+    date: "May 2025",
+    location: "Offline",
+    img: "public/assets/pastevent/2025-05-15_12-44-00_UTC.jpg",
+  },
+  {
+    title: "Ghost in the Firewall",
+    category: "Technical",
+    desc: "Capture-the-flag style cybersecurity challenge at Paradox'25 — decode, defend and uncover the rogue AI",
+    date: "May 2025",
+    location: "Offline",
+    img: "public/assets/pastevent/2025-05-14_08-34-35_UTC.jpg",
+  },
+  {
+    title: "Hack Eclipse — 24-hour Hackathon",
+    category: "Hackathon",
+    desc: "Round-the-clock coding marathon where teams built innovative solutions across environment, healthcare, fintech and more",
+    date: "May 2025",
+    location: "Virtual",
+    img: "public/assets/pastevent/2025-05-09_06-25-51_UTC.jpg",
+  },
+  {
+    title: "FrameQuest — Photography Contest",
+    category: "Cultural",
+    desc: "Three-round photography contest with a ₹6000 prize pool — portraits that tell a lasting story",
+    date: "February 2025",
+    location: "Virtual",
+    img: "public/assets/pastevent/2025-02-10_10-25-33_UTC.jpg",
+  },
+  {
+    title: "Into the Shadows — Special Forces Talk",
+    category: "Guest Talk",
+    desc: "Gripping session with Maj. Sushant Singh on courage, resilience and life as a Special Forces operative",
+    date: "February 2025",
+    location: "Virtual",
+    img: "public/assets/pastevent/2025-02-13_02-15-54_UTC.jpg",
+  },
+  {
+    title: "Python Odyssey",
+    category: "Workshop",
+    desc: "7-episode hands-on Python journey covering fundamentals, OOP and Flask web development",
+    date: "February 2025",
+    location: "Virtual",
+    img: "public/assets/pastevent/2025-02-06_00-30-44_UTC.jpg",
+  },
+  {
+    title: "Mahabharata — Science Meets History",
+    category: "Guest Talk",
+    desc: "Nilesh Oak takes the audience through scientific dating of the Mahabharata and the mysteries of ancient India",
+    date: "January 2025",
+    location: "Virtual",
+    img: "public/assets/pastevent/2025-01-27_08-57-27_UTC.jpg",
+  },
+  {
+    title: "Frames of Freedom — Republic Day Photography",
+    category: "Cultural",
+    desc: "Photography contest celebrating patriotism and India's culture — themes of Tiranga, Unsung Heroes and India in Motion",
+    date: "January 2025",
+    location: "Virtual",
+    img: "public/assets/pastevent/2025-01-25_01-20-01_UTC.jpg",
+  },
+  {
+    title: "Navodaya — Voices of Power with Smriti Irani",
+    category: "Guest Talk",
+    desc: "Grand finale of Voices of Power featuring Smriti Irani on leadership, empowerment and women shaping the future",
+    date: "December 2024",
+    location: "Virtual",
+    img: "public/assets/pastevent/2024-12-05_11-31-48_UTC.jpg",
+  },
+  {
+    title: "Dinkar Ki Pratiksha — Open Mic",
+    category: "Cultural",
+    desc: "Collaborative open mic celebrating the 116th birth anniversary of poet Ramdhari Singh Dinkar — poetry across all languages",
+    date: "September 2024",
+    location: "Virtual",
+    img: "public/assets/pastevent/2024-09-23_06-54-49_UTC.jpg",
+  },
+  {
+    title: "Sundarbans BS Talent Show",
+    category: "Cultural",
+    desc: "Platform for IITM BS students to showcase their extraordinary talents to the wider community",
+    date: "July 2024",
+    location: "Virtual",
+    img: "public/assets/pastevent/2024-07-16_11-41-17_UTC.jpg",
+  },
+  {
+    title: "How to Improve Concentration — Talk by Swami Mukundanand",
+    category: "Guest Talk",
+    desc: "Enlightening session by IIT-IIM alumnus and spiritual leader Swami Mukundanand Ji on focus and Vedic wisdom",
+    date: "March 2023",
+    location: "Virtual",
+    img: "public/assets/pastevent/2023-03-22_09-54-19_UTC.jpg",
+  },
+
   {
     title: "Shakti Series — Episode 1",
     category: "Empowerment",
@@ -364,39 +462,7 @@ const pastEvents = [
     location: "Virtual",
     img: "https://images.unsplash.com/photo-1540747913346-19212a4f3b1e?w=500&q=80&auto=format&fit=crop",
   },
-  {
-    title: "Hack Eclipse — 24-hour Hackathon",
-    category: "Hackathon",
-    desc: "Round-the-clock coding marathon where teams built innovative solutions to real-world problems",
-    date: "May 2025",
-    location: "Virtual",
-    img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500&q=80&auto=format&fit=crop",
-  },
-  {
-    title: "Ghost in the Firewall",
-    category: "Technical",
-    desc: "Capture-the-flag style cybersecurity contest testing ethical hacking and digital forensics skills",
-    date: "May 2025",
-    location: "Virtual",
-    img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=80&auto=format&fit=crop",
-  },
-  {
-    title: "Into the Shadows — Special Forces Talk",
-    category: "Guest Talk",
-    desc: "Exclusive session on India's Special Forces — their training, missions and the warrior mindset",
-    date: "February 2025",
-    location: "Virtual",
-    img: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=500&q=80&auto=format&fit=crop",
-  },
-  {
-    title: "Python Odyssey",
-    category: "Workshop",
-    desc: "Beginner-friendly Python workshop covering fundamentals, hands-on exercises and mini-projects",
-    date: "February 2025",
-    location: "Virtual",
-    img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500&q=80&auto=format&fit=crop",
-  },
-]
+];
 
 // Countdown
 let cdTimer = null;
