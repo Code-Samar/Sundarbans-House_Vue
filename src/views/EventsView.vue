@@ -163,7 +163,7 @@
       </div>
     </section>
 
-  <!-- Past Events -->
+<!-- Past Events -->
 <section class="section rs" style="background: var(--bg2)">
   <div class="container">
     <div class="sec-hdr">
@@ -175,30 +175,28 @@
         class="card-base rc"
         v-for="(p, i) in pastEvents"
         :key="p.title"
-        :style="`--card-delay:${(i % 6) * 0.08}s`"
-        style="display:flex; flex-direction:column; padding:0; overflow:hidden;">
+        :style="`--card-delay:${(i % 6) * 0.08}s`">
 
-        <!-- Image banner with icon overlay -->
-        <div style="position:relative; height:140px; background: linear-gradient(135deg, rgba(212,160,23,0.12), rgba(8,7,5,0.9)); flex-shrink:0; display:flex; align-items:center; justify-content:center;">
-          <span style="font-size:2.8rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5))">{{ p.icon }}</span>
-          <!-- date badge -->
-          <span style="position:absolute; top:10px; right:12px; font-size:0.7rem; background:rgba(212,160,23,0.15); color:var(--accent2); border:1px solid rgba(212,160,23,0.3); border-radius:20px; padding:2px 10px; font-weight:600; letter-spacing:0.03em;">
-            {{ p.date }}
-          </span>
+        <div style="height:160px; border-radius:10px; overflow:hidden; margin-bottom:1rem;">
+          <img :src="p.img" :alt="p.title" style="width:100%; height:100%; object-fit:cover;" />
         </div>
 
-        <!-- Content -->
-        <div style="padding: 1rem 1.25rem 1.25rem; display:flex; flex-direction:column; flex:1;">
-          <div class="section-tag" style="margin-bottom:0.5rem; background:rgba(212,160,23,0.06); color:var(--text2); border-color:rgba(212,160,23,0.2);">
-            Past Event
-          </div>
-          <h4 style="font-family:Cinzel,serif; font-weight:700; font-size:0.95rem; margin-bottom:0.5rem; line-height:1.4;">
-            {{ p.title }}
-          </h4>
-          <p class="desc" style="font-size:0.82rem; flex:1; margin-bottom:0;">
-            {{ p.desc }}
-          </p>
+        <div class="section-tag" style="opacity:0.7;">{{ p.category }}</div>
+
+        <h3 style="font-family:Cinzel,serif; font-weight:700; margin:0.5rem 0 0.4rem;">
+          {{ p.title }}
+        </h3>
+
+        <p class="desc" style="margin-bottom:0.75rem;">{{ p.desc }}</p>
+
+        <div style="display:flex; gap:1rem; margin-bottom:1rem; font-size:0.8rem; color:var(--text2); flex-wrap:wrap;">
+          <span>📅 {{ p.date }}</span>
+          <span v-if="p.location">📍 {{ p.location }}</span>
         </div>
+
+        <a href="#" class="submit-btn" style="font-size:0.85rem; padding:0.55rem 1.25rem; opacity:0.6; pointer-events:none; cursor:default;">
+          Event Concluded
+        </a>
 
       </div>
     </div>
@@ -327,114 +325,78 @@ const filteredEvents = computed(() =>
 
 const pastEvents = [
   {
-    icon: "💪",
     title: "Shakti Series — Episode 1",
+    category: "Empowerment",
     desc: "Inaugural session of the empowerment series celebrating strength, resilience and community spirit",
     date: "October 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=500&q=80&auto=format&fit=crop",
   },
   {
-    icon: "🪔",
-    title: "Navrang 2.0 — Celebrate Navratri with Boundless!",
+    title: "Navrang 2.0 — Celebrate Navratri",
+    category: "Cultural",
     desc: "Nine nights of vibrant cultural celebration featuring dance, music and festive traditions",
     date: "September 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1567591370762-b3db2e82eb3e?w=500&q=80&auto=format&fit=crop",
   },
   {
-    icon: "🇮🇳",
-    title: "Pre-Independence Day Session — Capt. Albert Louis",
+    title: "Pre-Independence Day Session",
+    category: "Guest Talk",
     desc: "Inspiring talk by Capt. Albert Louis on patriotism, sacrifice and the journey of our nation",
     date: "August 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1532375810709-75b1da00537c?w=500&q=80&auto=format&fit=crop",
   },
   {
-    icon: "🏸",
     title: "Paradox Badminton League 2.0",
+    category: "Sports",
     desc: "Inter-house badminton tournament with intense rallies and fierce competition across divisions",
     date: "May 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=500&q=80&auto=format&fit=crop",
   },
   {
-    icon: "🏏",
-    title: "IPL Auction Showdown — Bid. Strategise. Conquer.",
+    title: "IPL Auction Showdown",
+    category: "E-Sports",
     desc: "Strategic mock IPL auction where participants built dream teams with limited budgets",
     date: "May 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1540747913346-19212a4f3b1e?w=500&q=80&auto=format&fit=crop",
   },
   {
-    icon: "🏃",
-    title: "Kampus Run — Run Clean. Run Green.",
-    desc: "Community marathon promoting fitness and environmental awareness among students",
-    date: "May 2025",
-  },
-  {
-    icon: "⚽",
-    title: "Paradox Champions League — Football Faceoff",
-    desc: "High-energy inter-house football championship with knockout rounds and thrilling finals",
-    date: "May 2025",
-  },
-  {
-    icon: "🛡️",
-    title: "Ghost in the Firewall — Cybersecurity Challenge",
-    desc: "Capture-the-flag style cybersecurity contest testing ethical hacking and digital forensics skills",
-    date: "May 2025",
-  },
-  {
-    icon: "💻",
     title: "Hack Eclipse — 24-hour Hackathon",
+    category: "Hackathon",
     desc: "Round-the-clock coding marathon where teams built innovative solutions to real-world problems",
     date: "May 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500&q=80&auto=format&fit=crop",
   },
   {
-    icon: "🎖️",
+    title: "Ghost in the Firewall",
+    category: "Technical",
+    desc: "Capture-the-flag style cybersecurity contest testing ethical hacking and digital forensics skills",
+    date: "May 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=80&auto=format&fit=crop",
+  },
+  {
     title: "Into the Shadows — Special Forces Talk",
+    category: "Guest Talk",
     desc: "Exclusive session on India's Special Forces — their training, missions and the warrior mindset",
     date: "February 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=500&q=80&auto=format&fit=crop",
   },
   {
-    icon: "📸",
-    title: "FrameQuest — Photography Contest",
-    desc: "Creative photography challenge showcasing diverse perspectives through the lens",
-    date: "February 2025",
-  },
-  {
-    icon: "🐍",
-    title: "Python Odyssey — Join the Coding Journey",
+    title: "Python Odyssey",
+    category: "Workshop",
     desc: "Beginner-friendly Python workshop covering fundamentals, hands-on exercises and mini-projects",
     date: "February 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500&q=80&auto=format&fit=crop",
   },
-  {
-    icon: "📖",
-    title: "How old is the Mahabharata? — Talk by Nilesh Oak",
-    desc: "Fascinating talk by author Nilesh Oak exploring astronomical dating of the Mahabharata era",
-    date: "January 2025",
-  },
-  {
-    icon: "🇮🇳",
-    title: "Frames of Freedom — Republic Day Photography",
-    desc: "Patriotic photography contest capturing the spirit of Republic Day through powerful imagery",
-    date: "January 2025",
-  },
-  {
-    icon: "👩‍💼",
-    title: "Navodaya — A New Dawn of Women in Leadership",
-    desc: "Panel discussion celebrating women leaders and their journeys in breaking barriers",
-    date: "December 2024",
-  },
-  {
-    icon: "🎤",
-    title: "Dinkar ki Pratiksha — Inter-House Open Mic",
-    desc: "Open mic night featuring poetry, storytelling and spoken word performances across houses",
-    date: "September 2024",
-  },
-  {
-    icon: "🌟",
-    title: "Sundarbans BS Talent Show",
-    desc: "Grand showcase of hidden talents — singing, dancing, comedy and creative performances",
-    date: "July 2024",
-  },
-  {
-    icon: "🧘",
-    title: "How to Improve Concentration — Swami Mukundanand Ji",
-    desc: "Spiritual wisdom session on focus, mindfulness and techniques to sharpen concentration",
-    date: "March 2023",
-  },
-];
+]
 
 // Countdown
 let cdTimer = null;
