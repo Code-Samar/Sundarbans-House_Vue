@@ -163,40 +163,47 @@
       </div>
     </section>
 
-    <!-- Past Events -->
-    <section class="section rs" style="background: var(--bg2)">
-      <div class="container">
-        <div class="sec-hdr">
-          <div class="section-tag">Memories</div>
-          <h2 class="section-title-xl">Past <span class="tg">Events</span></h2>
+  <!-- Past Events -->
+<section class="section rs" style="background: var(--bg2)">
+  <div class="container">
+    <div class="sec-hdr">
+      <div class="section-tag">Memories</div>
+      <h2 class="section-title-xl">Past <span class="tg">Events</span></h2>
+    </div>
+    <div class="grid-3">
+      <div
+        class="card-base rc"
+        v-for="(p, i) in pastEvents"
+        :key="p.title"
+        :style="`--card-delay:${(i % 6) * 0.08}s`"
+        style="display:flex; flex-direction:column; padding:0; overflow:hidden;">
+
+        <!-- Image banner with icon overlay -->
+        <div style="position:relative; height:140px; background: linear-gradient(135deg, rgba(212,160,23,0.12), rgba(8,7,5,0.9)); flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+          <span style="font-size:2.8rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5))">{{ p.icon }}</span>
+          <!-- date badge -->
+          <span style="position:absolute; top:10px; right:12px; font-size:0.7rem; background:rgba(212,160,23,0.15); color:var(--accent2); border:1px solid rgba(212,160,23,0.3); border-radius:20px; padding:2px 10px; font-weight:600; letter-spacing:0.03em;">
+            {{ p.date }}
+          </span>
         </div>
-        <div class="grid-3">
-          <div
-            class="card-base rc"
-            v-for="p in pastEvents"
-            :key="p.title"
-            style="--card-delay: 0.1s; opacity: 0.8">
-            <div style="font-size: 1.25rem; margin-bottom: 0.5rem">
-              {{ p.icon }}
-            </div>
-            <h4
-              style="
-                font-family: Cinzel, serif;
-                font-weight: 700;
-                margin-bottom: 0.4rem;
-              ">
-              {{ p.title }}
-            </h4>
-            <p class="desc" style="font-size: 0.82rem; margin-bottom: 0.5rem">
-              {{ p.desc }}
-            </p>
-            <span style="font-size: 0.75rem; color: var(--text3)">{{
-              p.date
-            }}</span>
+
+        <!-- Content -->
+        <div style="padding: 1rem 1.25rem 1.25rem; display:flex; flex-direction:column; flex:1;">
+          <div class="section-tag" style="margin-bottom:0.5rem; background:rgba(212,160,23,0.06); color:var(--text2); border-color:rgba(212,160,23,0.2);">
+            Past Event
           </div>
+          <h4 style="font-family:Cinzel,serif; font-weight:700; font-size:0.95rem; margin-bottom:0.5rem; line-height:1.4;">
+            {{ p.title }}
+          </h4>
+          <p class="desc" style="font-size:0.82rem; flex:1; margin-bottom:0;">
+            {{ p.desc }}
+          </p>
         </div>
+
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
     <!-- Host CTA -->
     <section
