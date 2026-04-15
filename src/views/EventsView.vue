@@ -324,7 +324,30 @@ const filteredEvents = computed(() =>
 );
 
 const pastEvents = [
-
+  {
+    title: "Shakti Series — Episode 1",
+    category: "Empowerment",
+    desc: "Inaugural session of the empowerment series celebrating strength, resilience and community spirit",
+    date: "October 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=500&q=80&auto=format&fit=crop",
+  },
+  {
+    title: "Navrang 2.0 — Celebrate Navratri",
+    category: "Cultural",
+    desc: "Nine nights of vibrant cultural celebration featuring dance, music and festive traditions",
+    date: "September 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1567591370762-b3db2e82eb3e?w=500&q=80&auto=format&fit=crop",
+  },
+  {
+    title: "Pre-Independence Day Session",
+    category: "Guest Talk",
+    desc: "Inspiring talk by Capt. Albert Louis on patriotism, sacrifice and the journey of our nation",
+    date: "August 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1532375810709-75b1da00537c?w=500&q=80&auto=format&fit=crop",
+  },
   {
     title: "Paradox Champions League — Football Faceoff",
     category: "Sports",
@@ -348,6 +371,22 @@ const pastEvents = [
     date: "May 2025",
     location: "Virtual",
     img: "public/assets/pastevent/2025-05-09_06-25-51_UTC.jpg",
+  },
+  {
+    title: "Paradox Badminton League 2.0",
+    category: "Sports",
+    desc: "Inter-house badminton tournament with intense rallies and fierce competition across divisions",
+    date: "May 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=500&q=80&auto=format&fit=crop",
+  },
+  {
+    title: "IPL Auction Showdown",
+    category: "E-Sports",
+    desc: "Strategic mock IPL auction where participants built dream teams with limited budgets",
+    date: "May 2025",
+    location: "Virtual",
+    img: "https://images.unsplash.com/photo-1540747913346-19212a4f3b1e?w=500&q=80&auto=format&fit=crop",
   },
   {
     title: "FrameQuest — Photography Contest",
@@ -414,56 +453,15 @@ const pastEvents = [
     img: "public/assets/pastevent/2024-07-16_11-41-17_UTC.jpg",
   },
   {
-    title: "How to Improve Concentration — Talk by Swami Mukundanand",
+    title: "How to Improve Concentration — Swami Mukundanand",
     category: "Guest Talk",
     desc: "Enlightening session by IIT-IIM alumnus and spiritual leader Swami Mukundanand Ji on focus and Vedic wisdom",
     date: "March 2023",
     location: "Virtual",
     img: "public/assets/pastevent/2023-03-22_09-54-19_UTC.jpg",
   },
-
-  {
-    title: "Shakti Series — Episode 1",
-    category: "Empowerment",
-    desc: "Inaugural session of the empowerment series celebrating strength, resilience and community spirit",
-    date: "October 2025",
-    location: "Virtual",
-    img: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=500&q=80&auto=format&fit=crop",
-  },
-  {
-    title: "Navrang 2.0 — Celebrate Navratri",
-    category: "Cultural",
-    desc: "Nine nights of vibrant cultural celebration featuring dance, music and festive traditions",
-    date: "September 2025",
-    location: "Virtual",
-    img: "https://images.unsplash.com/photo-1567591370762-b3db2e82eb3e?w=500&q=80&auto=format&fit=crop",
-  },
-  {
-    title: "Pre-Independence Day Session",
-    category: "Guest Talk",
-    desc: "Inspiring talk by Capt. Albert Louis on patriotism, sacrifice and the journey of our nation",
-    date: "August 2025",
-    location: "Virtual",
-    img: "https://images.unsplash.com/photo-1532375810709-75b1da00537c?w=500&q=80&auto=format&fit=crop",
-  },
-  {
-    title: "Paradox Badminton League 2.0",
-    category: "Sports",
-    desc: "Inter-house badminton tournament with intense rallies and fierce competition across divisions",
-    date: "May 2025",
-    location: "Virtual",
-    img: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=500&q=80&auto=format&fit=crop",
-  },
-  {
-    title: "IPL Auction Showdown",
-    category: "E-Sports",
-    desc: "Strategic mock IPL auction where participants built dream teams with limited budgets",
-    date: "May 2025",
-    location: "Virtual",
-    img: "https://images.unsplash.com/photo-1540747913346-19212a4f3b1e?w=500&q=80&auto=format&fit=crop",
-  },
 ];
-
+  
 // Countdown
 let cdTimer = null;
 function updateCd() {
