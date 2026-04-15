@@ -177,7 +177,7 @@ const members = [
   {
     rank: '🥇', rankClass: 'rank-1',
     name: 'Rushabh Kapse', city: 'Mumbai', points: '1,400', badge: '🔥 Top Contributor',
-    img: '@/assets/teams/rushabh.jpg',
+    img: 'src=@/assets/teams/rushabh.jpg',
   },
   {
     rank: '🥈', rankClass: 'rank-2',
