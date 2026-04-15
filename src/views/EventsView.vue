@@ -194,10 +194,6 @@
           <span v-if="p.location">📍 {{ p.location }}</span>
         </div>
 
-        <a href="#" class="submit-btn" style="font-size:0.85rem; padding:0.55rem 1.25rem; opacity:0.6; pointer-events:none; cursor:default;">
-          Event Concluded
-        </a>
-
       </div>
     </div>
   </div>
