@@ -196,10 +196,14 @@ const members = [
   {
     rank: '5', rankClass: '',
     name: 'Chandan Saw', city: 'Kolkata', points: '700', badge: '💡 Innovator', initial: 'V',
-
+  },
   {
     rank: '6', rankClass: '',
     name: 'Dishi Gupta', city: 'Hyderabad', points: '400', badge: '🤝 Community Builder', initial: 'A',
+  },
+   {
+    rank: '7', rankClass: '',
+    name: 'R Sai Sahanaa', city: 'Hyderabad', points: '400', badge: '🤝 Community Builder', initial: 'A',
   },
  
   
