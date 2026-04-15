@@ -143,16 +143,17 @@
               <div class="past-card-head">
                 <div class="past-card-top">
                   <span class="tl-badge">{{ meetup.badge }}</span>
-                  <a :href="meetup.instaUrl" target="_blank" class="past-insta">
+                  <a v-if="meetup.instaUrl" :href="meetup.instaUrl" target="_blank" class="past-insta">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                     View Post
                   </a>
                 </div>
                 <h3 class="tl-title">{{ meetup.title }}</h3>
                 <div class="past-meta-row">
-                  <div class="past-chip">📅 {{ meetup.date }}</div>
-                  <div class="past-chip">📍 {{ meetup.location }}</div>
-                  <div class="past-chip">⏱️ {{ meetup.duration }}</div>
+                  <div v-if="meetup.date" class="past-chip">📅 {{ meetup.date }}</div>
+                  <div v-if="meetup.location" class="past-chip">📍 {{ meetup.location }}</div>
+                  <div v-if="meetup.duration" class="past-chip">⏱️ {{ meetup.duration }}</div>
+                  <div v-if="meetup.meetupNumber" class="past-chip">#️⃣ {{ meetup.meetupNumber }}</div>
                   <span v-if="meetup.special" class="past-chip green">🏆 {{ meetup.special }}</span>
                 </div>
               </div>
@@ -161,13 +162,17 @@
                 <p>{{ meetup.about }}</p>
               </div>
               <div class="past-stats">
-                <div class="past-stat">
+                <div v-if="meetup.attended" class="past-stat">
                   <span class="past-stat-num">{{ meetup.attended }}</span>
                   <span class="past-stat-lbl">Attended</span>
                 </div>
-                <div class="past-stat">
-                  <span class="past-stat-num">{{ meetup.photos }}</span>
-                  <span class="past-stat-lbl">Photos Taken</span>
+                <div v-if="meetup.organizer" class="past-stat">
+                  <span class="past-stat-num">👤</span>
+                  <span class="past-stat-lbl">{{ meetup.organizer }}</span>
+                </div>
+                <div v-else-if="meetup.numberDisplay" class="past-stat">
+                  <span class="past-stat-num">{{ meetup.numberDisplay }}</span>
+                  <span class="past-stat-lbl">Meetup No.</span>
                 </div>
                 <div class="past-stat">
                   <span class="past-stat-num">⭐</span>
@@ -184,7 +189,7 @@
                 <div class="past-footer-tags">
                   <span v-for="tag in meetup.tags" :key="tag" class="past-ftag">{{ tag }}</span>
                 </div>
-                <a :href="meetup.instaUrl" target="_blank" class="past-view-more">View on Instagram →</a>
+                <a v-if="meetup.instaUrl" :href="meetup.instaUrl" target="_blank" class="past-view-more">View on Instagram →</a>
               </div>
             </div>
           </div>
