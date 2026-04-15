@@ -177,7 +177,7 @@ const members = [
   {
     rank: '🥇', rankClass: 'rank-1',
     name: 'Rushabh Kapse', city: 'Mumbai', points: '1,400', badge: '🔥 Top Contributor',
-    img: '@/assets/teams/rushabh.jpg',
+    img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&auto=format&fit=crop&crop=face',
   },
   {
     rank: '🥈', rankClass: 'rank-2',
@@ -201,10 +201,7 @@ const members = [
     rank: '6', rankClass: '',
     name: 'Dishi Gupta', city: 'Hyderabad', points: '400', badge: '🤝 Community Builder', initial: 'A',
   },
-  {
-    rank: '7', rankClass: '',
-    name: 'R Sai Sahanaa', city: 'Chennai', points: '100', badge: '🤝 Community Builder', initial: 'A',
-  },
+ 
   
 ]
 </script>
