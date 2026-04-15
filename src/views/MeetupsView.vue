@@ -176,8 +176,8 @@ const activeTab = ref('All Time')
 const members = [
   {
     rank: '🥇', rankClass: 'rank-1',
-    name: 'Arjun Sharma', city: 'Delhi', points: '4,280', badge: '🔥 Top Contributor',
-    img: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80&auto=format&fit=crop&crop=face',
+    name: 'Rushabh Kapse', city: 'Mumbai', points: '1,400', badge: '🔥 Top Contributor',
+    img: '@/assets/teams/rushabh.jpg',
   },
   {
     rank: '🥈', rankClass: 'rank-2',
