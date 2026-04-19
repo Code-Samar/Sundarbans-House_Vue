@@ -202,7 +202,9 @@ function typeIcon(type) {
 <style scoped>
 /* ─── Section wrapper ──────────────────────────────────────── */
 .daily-notif-section {
-  background: var(--bg);
+  background: rgba(13, 11, 8, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 /* ─── Stage ────────────────────────────────────────────────── */
@@ -242,7 +244,9 @@ function typeIcon(type) {
 
 .notif-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(13, 11, 8, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(212, 160, 23, 0.15);
   border-radius: 1rem;
   padding: 1.75rem 1.75rem 1.5rem 2.25rem;
