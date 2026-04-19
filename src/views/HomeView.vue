@@ -14,7 +14,7 @@
       <div class="hero-content" id="heroContent">
         <div class="hero-badge animate-in" style="--delay: 0.1s">
           <span class="badge-dot"></span>
-          IIT Madras BS Online Degree Programme
+          IIT Madras BS Degree Programme
         </div>
         <h1 class="hero-title animate-in" style="--delay: 0.3s">
           <span class="hero-title-sm">Welcome to</span>
@@ -69,10 +69,6 @@
             <div class="stat-label">Cities Connected</div>
           </div>
         </div>
-      </div>
-      <div class="hero-scroll-indicator">
-        <div class="scroll-text">Scroll to explore</div>
-        <div class="scroll-line"><div class="scroll-dot-anim"></div></div>
       </div>
     </section>
 
@@ -212,40 +208,8 @@
       </div>
     </section>
 
-    <!-- PULSE / LIVE UPDATES -->
-    <section class="section pulse-section rs">
-      <div class="container">
-        <div class="pulse-layout">
-          <div class="pulse-hdr-col">
-            <div class="section-tag">Live Updates</div>
-            <h2 class="section-title-xl">
-              Sundarbans<br /><span class="tg">Pulse</span>
-            </h2>
-            <p class="desc">
-              Stay connected with the heartbeat of our community. Real-time
-              updates on events and achievements.
-            </p>
-            <div class="live-badge">
-              <span class="live-dot"></span><span>Live feed</span>
-            </div>
-          </div>
-          <div class="pulse-cards-col">
-            <div class="pcard" v-for="p in pulseItems" :key="p.title">
-              <div class="pcard-accent" :class="p.color"></div>
-              <div class="pcard-icon">{{ p.icon }}</div>
-              <div class="pcard-body">
-                <h4>{{ p.title }}</h4>
-                <p>{{ p.desc }}</p>
-                <div class="pcard-meta">
-                  <span class="ptag">{{ p.tag }}</span>
-                  <span class="ptime">{{ p.time }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- DAILY NOTIFICATIONS (replaces Pulse) -->
+    <DailyNotifications />
 
     <!-- MEET HUB -->
     <section class="section meet-section rs">
@@ -429,15 +393,13 @@
         </div>
       </div>
     </section>
-
-
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-
 import { useScrollReveal, useCounters } from "../composables/useAnimations.js";
+import DailyNotifications from "../components/DailyNotifications.vue";
 
 useScrollReveal();
 useCounters();
@@ -477,42 +439,6 @@ const features = [
     img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&q=80&auto=format&fit=crop",
     url: "/meetups",
     cta: "Find Meetups",
-  },
-];
-
-// Pulse
-const pulseItems = [
-  {
-    icon: "📢",
-    title: "New Study Material Released",
-    desc: "Foundation course materials for Mathematics now available in Study Corner",
-    tag: "Academic",
-    time: "2 hours ago",
-    color: "pa-blue",
-  },
-  {
-    icon: "🏆",
-    title: "Community Milestone!",
-    desc: "Sundarbans House crosses 5000+ active members — a historic achievement!",
-    tag: "Milestone",
-    time: "5 hours ago",
-    color: "pa-green",
-  },
-  {
-    icon: "📅",
-    title: "Upcoming Tech Talk",
-    desc: "Guest lecture by IIT Madras faculty on AI and Data Science — Register now!",
-    tag: "Event",
-    time: "1 day ago",
-    color: "pa-orange",
-  },
-  {
-    icon: "🌟",
-    title: "Student Achievement",
-    desc: "3 Sundarbans students placed in top 10 of national coding competition",
-    tag: "Achievement",
-    time: "2 days ago",
-    color: "pa-purple",
   },
 ];
 
@@ -628,13 +554,11 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Brighten text for transparent backgrounds (over forest image) */
-:deep(.sec-sub), 
+:deep(.sec-sub),
 :deep(.desc) {
   color: #ffffff;
 }
 
-/* Maintain muted gold for glassmorphic (blurred) elements to preserve luxury aesthetic */
 .about-section :deep(.desc),
 .about-section :deep(.sec-sub),
 .fcard p,
@@ -645,7 +569,6 @@ onUnmounted(() => {
   color: var(--text2);
 }
 
-/* Specific overrides for HomeView components */
 .tcard p {
   color: var(--text2);
 }
@@ -654,4 +577,3 @@ onUnmounted(() => {
   color: var(--text2);
 }
 </style>
-
