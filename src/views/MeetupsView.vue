@@ -27,17 +27,9 @@
             @mouseleave="hoveredRegion = null"
             @click="goToRegion(region.slug)"
           >
-            <!-- BG IMAGE -->
-            <img
-              :src="region.image"
-              :alt="region.name"
-              class="region-bg"
-              loading="lazy"
-            />
+            <img :src="region.image" :alt="region.name" class="region-bg" loading="lazy" />
             <div class="region-overlay"></div>
             <div class="region-gold-tint" v-if="hoveredRegion === region.slug"></div>
-
-            <!-- CONTENT -->
             <div class="region-content">
               <div class="region-top">
                 <span class="region-badge" v-if="region.badge">{{ region.badge }}</span>
@@ -70,36 +62,29 @@
         <div class="sec-hdr">
           <div class="section-tag">Hall of Fame</div>
           <h2 class="section-title-xl">
-            Member <span class="tg">Leaderboard</span>
+            Regional Coordinator <span class="tg">Leaderboard</span>
           </h2>
           <p class="sec-sub">
-            Top contributors and most active members of Sundarbans House
+           Top Contributors and Most Active Regional Coordinators of Sundarbans House
           </p>
         </div>
+
         <div class="card-base">
-          <div
-            style="
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              margin-bottom: 1.5rem;
-              flex-wrap: wrap;
-              gap: 0.75rem;
-            "
-          >
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
             <div class="filter-tabs" style="margin: 0">
               <div
                 class="ftab"
                 v-for="tab in tabs"
-                :key="tab"
-                :class="{ active: activeTab === tab }"
-                @click="activeTab = tab"
+                :key="tab.key"
+                :class="{ active: activeTab === tab.key }"
+                @click="activeTab = tab.key"
               >
-                {{ tab }}
+                {{ tab.label }}
               </div>
             </div>
             <span style="font-size: 0.8rem; color: var(--text2)">Updated daily</span>
           </div>
+
           <table class="lboard-table">
             <thead>
               <tr>
@@ -111,7 +96,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="lboard-row" v-for="m in members" :key="m.name">
+              <tr class="lboard-row" v-for="m in members" :key="m.name + activeTab">
                 <td>
                   <span class="lboard-rank" :class="m.rankClass">{{ m.rank }}</span>
                 </td>
@@ -138,10 +123,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useScrollReveal } from '../composables/useAnimations.js'
 import PageHero from '../components/PageHero.vue'
+import { leaderboardData } from '@/data/leaderboard.js'
 
 import imgDelhi      from '@/assets/regions/delhi.jpg'
 import imgMumbai     from '@/assets/regions/mumbai.jpg'
@@ -150,6 +136,8 @@ import imgKolkata    from '@/assets/regions/kolkata.jpg'
 import imgHyderabad  from '@/assets/regions/hyderabad.jpg'
 import imgPatna      from '@/assets/regions/patna.jpg'
 import imgChandigarh from '@/assets/regions/chandigarh.jpg'
+import imgChennai    from '@/assets/regions/chennai.jpg'
+import imgLucknow    from '@/assets/regions/lucknow.jpg'
 
 useScrollReveal()
 
@@ -157,67 +145,52 @@ const router = useRouter()
 const hoveredRegion = ref(null)
 
 const regions = [
-  { slug: 'delhi-ncr',  name: 'Delhi-NCR',    members: '320+', image: imgDelhi,      badge: 'Most Active', featured: true },
-  { slug: 'mumbai',     name: 'Mumbai',       members: '450+', image: imgMumbai,     badge: 'Largest Chapter' },
-  { slug: 'bangalore',  name: 'Bangalore',    members: '390+', image: imgBangalore,  badge: null },
-  { slug: 'kolkata',    name: 'Kolkata',      members: '280+', image: imgKolkata,    badge: null },
-  { slug: 'hyderabad',  name: 'Hyderabad',    members: '210+', image: imgHyderabad,  badge: null },
-  { slug: 'patna',      name: 'Patna',        members: '180+', image: imgPatna,      badge: null },
-  { slug: 'chandigarh', name: 'Chandigarh',   members: '120+', image: imgChandigarh, badge: 'Rising Chapter' },
+  { slug: 'delhi-ncr',  name: 'Delhi-NCR',  members: '320+', image: imgDelhi,      badge: 'Most Active',    featured: true },
+  { slug: 'mumbai',     name: 'Mumbai',     members: '450+', image: imgMumbai,     badge: 'Largest Chapter'               },
+  { slug: 'bangalore',  name: 'Bangalore',  members: '390+', image: imgBangalore,  badge: null                            },
+  { slug: 'kolkata',    name: 'Kolkata',    members: '280+', image: imgKolkata,    badge: null                            },
+  { slug: 'hyderabad',  name: 'Hyderabad',  members: '210+', image: imgHyderabad,  badge: null                            },
+  { slug: 'patna',      name: 'Patna',      members: '180+', image: imgPatna,      badge: null                            },
+  { slug: 'chandigarh', name: 'Chandigarh', members: '120+', image: imgChandigarh, badge: 'Rising Chapter'                },
+  { slug: 'chennai',    name: 'Chennai',    members: '150+', image: imgChennai,    badge: null                            },
+  { slug: 'lucknow',    name: 'Lucknow',    members: '110+', image: imgLucknow,    badge: null                            },
 ]
 
 function goToRegion(slug) {
   router.push('/meetups/' + slug)
 }
 
-const tabs = ['All Time', 'This Month', 'This Week']
-const activeTab = ref('All Time')
+const MEDALS  = ['🥇', '🥈', '🥉']
+const RANK_CLASSES = ['rank-1', 'rank-2', 'rank-3']
 
-const members = [
-  {
-    rank: '🥇', rankClass: 'rank-1',
-    name: 'Rushabh Kapse', city: 'Mumbai', points: '1,400', badge: '🔥 Top Contributor',
-    img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&auto=format&fit=crop&crop=face',
-  },
-  {
-    rank: '🥈', rankClass: 'rank-2',
-    name: 'Nivash Kumar', city: 'Patna', points: '1,000', badge: '⭐ Helper',
-    img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&auto=format&fit=crop&crop=face',
-  },
-  {
-    rank: '🥉', rankClass: 'rank-3',
-    name: 'Divya Prakash', city: 'Delhi NCR', points: '1,000', badge: '📚 Academician',
-    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80&auto=format&fit=crop&crop=face',
-  },
-  {
-    rank: '4', rankClass: '',
-    name: 'AAkash Rawal', city: 'Chandigarh', points: '900', badge: '🎯 Event Pro', initial: 'S',
-  },
-  {
-    rank: '5', rankClass: '',
-    name: 'Chandan Saw', city: 'Kolkata', points: '700', badge: '💡 Innovator', initial: 'V',
-  },
-  {
-    rank: '6', rankClass: '',
-    name: 'Dishi Gupta', city: 'Hyderabad', points: '400', badge: '🤝 Community Builder', initial: 'A',
-  },
-   {
-    rank: '7', rankClass: '',
-    name: 'R Sai Sahanaa', city: 'Hyderabad', points: '400', badge: '🤝 Community Builder', initial: 'A',
-  },
- 
-  
+const tabs = [
+  { label: 'All Time',         key: 'allTime' },
+  { label: 'Term 1 (Jan–Apr)', key: 'term1'   },
+  { label: 'Term 2 (May–Aug)', key: 'term2'   },
+  { label: 'Term 3 (Sep–Dec)', key: 'term3'   },
 ]
+
+const activeTab = ref('allTime')
+
+const members = computed(() => {
+  const raw = leaderboardData[activeTab.value] ?? []
+  return [...raw]
+    .sort((a, b) => b.points - a.points)
+    .map((m, i) => ({
+      ...m,
+      rank:      MEDALS[i] ?? String(i + 1),
+      rankClass: RANK_CLASSES[i] ?? '',
+      points:    m.points.toLocaleString(),
+    }))
+})
 </script>
 
 <style scoped>
-/* REGIONS GRID CSS (preserved from previous version) */
 .regions-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
-
 .region-card {
   position: relative;
   border-radius: 18px;
@@ -232,10 +205,7 @@ const members = [
   transform: translateY(-4px);
   box-shadow: 0 24px 64px rgba(0,0,0,.7);
 }
-.region-card.featured {
-  border-color: rgba(212,160,23,.3);
-}
-
+.region-card.featured { border-color: rgba(212,160,23,.3); }
 .region-bg {
   position: absolute;
   inset: 0;
@@ -249,7 +219,6 @@ const members = [
   transform: scale(1.06);
   filter: saturate(1) brightness(.85);
 }
-
 .region-overlay {
   position: absolute;
   inset: 0;
@@ -259,14 +228,12 @@ const members = [
 .region-card:hover .region-overlay {
   background: linear-gradient(to top, rgba(8,7,5,.92) 0%, rgba(8,7,5,.4) 55%, rgba(212,160,23,.04) 100%);
 }
-
 .region-gold-tint {
   position: absolute;
   inset: 0;
   background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212,160,23,.12) 0%, transparent 70%);
   pointer-events: none;
 }
-
 .region-content {
   position: absolute;
   inset: 0;
@@ -275,8 +242,7 @@ const members = [
   justify-content: space-between;
   padding: 20px;
 }
-
-.region-top { display:flex;justify-content:flex-end; }
+.region-top { display: flex; justify-content: flex-end; }
 .region-badge {
   font-size: 11px;
   font-weight: 700;
@@ -290,8 +256,7 @@ const members = [
   padding: 5px 12px;
   border-radius: 100px;
 }
-
-.region-bottom { display:flex;flex-direction:column;gap:4px; }
+.region-bottom { display: flex; flex-direction: column; gap: 4px; }
 .region-name {
   font-family: 'Cinzel', serif;
   font-size: clamp(20px, 2vw, 26px);
@@ -306,8 +271,6 @@ const members = [
   color: var(--text2);
   letter-spacing: .03em;
 }
-
-/* OTHER STYLES (from Copy) */
 .submit-btn {
   background: var(--accent);
   color: #000;
@@ -324,7 +287,6 @@ const members = [
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(212, 160, 23, 0.4);
 }
-
 .card-base {
   background: var(--bg);
   border: 1px solid var(--border);
@@ -352,17 +314,9 @@ const members = [
   padding: 16px;
   transition: background 0.3s;
 }
-.lboard-row:hover td {
-  background: var(--surface2);
-}
-.lboard-row td:first-child {
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
-}
-.lboard-row td:last-child {
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
+.lboard-row:hover td { background: var(--surface2); }
+.lboard-row td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+.lboard-row td:last-child  { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
 .lboard-rank {
   display: inline-flex;
   align-items: center;
@@ -376,15 +330,12 @@ const members = [
   background: var(--bg);
   border: 1px solid var(--border);
 }
-.rank-1 { background: rgba(212, 160, 23, 0.15); color: var(--accent); border-color: rgba(212, 160, 23, 0.3); font-size: 1.2rem; }
-.rank-2 { background: rgba(200, 200, 200, 0.1); color: #ccc; border-color: rgba(200, 200, 200, 0.2); font-size: 1.2rem; }
-.rank-3 { background: rgba(184, 115, 51, 0.1); color: #b87333; border-color: rgba(184, 115, 51, 0.2); font-size: 1.2rem; }
-.lboard-member {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.lboard-avatar, .lboard-avatar-placeholder {
+.rank-1 { background: rgba(212,160,23,0.15); color: var(--accent); border-color: rgba(212,160,23,0.3); font-size: 1.2rem; }
+.rank-2 { background: rgba(200,200,200,0.1); color: #ccc; border-color: rgba(200,200,200,0.2); font-size: 1.2rem; }
+.rank-3 { background: rgba(184,115,51,0.1); color: #b87333; border-color: rgba(184,115,51,0.2); font-size: 1.2rem; }
+.lboard-member { display: flex; align-items: center; gap: 12px; }
+.lboard-avatar,
+.lboard-avatar-placeholder {
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -428,7 +379,6 @@ const members = [
   font-size: 0.75rem;
   color: var(--text2);
 }
-
 .filter-tabs {
   display: flex;
   background: var(--surface);
@@ -446,13 +396,8 @@ const members = [
   cursor: pointer;
   transition: all 0.3s;
 }
-.ftab.active {
-  background: var(--accent);
-  color: #000;
-}
-.ftab:hover:not(.active) {
-  color: var(--text);
-}
+.ftab.active { background: var(--accent); color: #000; }
+.ftab:hover:not(.active) { color: var(--text); }
 
 @media (max-width: 1100px) { .regions-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 800px) {

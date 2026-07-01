@@ -166,7 +166,17 @@
           >
           
           <router-link
-            to="/members"
+            to="/verify-certificate"
+            class="nav-verify-btn"
+            @click="menuOpen = false">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+            <span>Verify Certificate</span>
+          </router-link>
+          <router-link
+            to="/login"
             class="nav-cta-btn"
             @click="menuOpen = false">
             <span>Lounge</span>
@@ -196,23 +206,6 @@
             </svg>
           </a>
         </nav>
-        <div class="nav-tools">
-          <button
-            class="nav-tool-btn"
-            @click="openSearch"
-            title="Search (Ctrl+K)">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2">
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-          </button>
-        </div>
       </div>
     </header>
 

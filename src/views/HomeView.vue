@@ -70,6 +70,7 @@
           </div>
         </div>
       </div>
+  
     </section>
 
     <!-- MARQUEE -->
@@ -208,8 +209,9 @@
       </div>
     </section>
 
-    <!-- DAILY NOTIFICATIONS (replaces Pulse) -->
+  <!-- DAILY NOTIFICATIONS (replaces Pulse) -->
     <DailyNotifications />
+
 
     <!-- MEET HUB -->
     <section class="section meet-section rs">
@@ -318,31 +320,7 @@
       </div>
     </section>
 
-    <!-- TESTIMONIALS -->
-    <section class="section testimonials-section rs">
-      <div class="container">
-        <div class="sec-hdr">
-          <div class="section-tag">What Members Say</div>
-          <h2 class="section-title-xl">
-            Voices of <span class="tg">Sundarbans</span>
-          </h2>
-        </div>
-        <div class="tgrid">
-          <div class="tcard rc" v-for="t in testimonials" :key="t.name">
-            <div class="tquote">"</div>
-            <p>{{ t.quote }}</p>
-            <div class="tauthor">
-              <img :src="t.img" :alt="t.name" />
-              <div>
-                <strong>{{ t.name }}</strong
-                ><span>{{ t.role }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    
     <!-- CTA -->
     <section
       class="cta-section rs"
@@ -393,11 +371,14 @@
         </div>
       </div>
     </section>
+
+
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+
 import { useScrollReveal, useCounters } from "../composables/useAnimations.js";
 import DailyNotifications from "../components/DailyNotifications.vue";
 
@@ -442,30 +423,6 @@ const features = [
   },
 ];
 
-// Testimonials
-const testimonials = [
-  {
-    quote:
-      "Sundarbans House completely transformed my IIT BS journey. The study groups, the events, the friends — I wouldn't trade this community for anything.",
-    name: "Arjun Sharma",
-    role: "2nd Year, Data Science",
-    img: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80&auto=format&fit=crop&crop=face",
-  },
-  {
-    quote:
-      "The peer mentorship here is incredible. When I was struggling with stats, seniors from Sundarbans were there helping me through practice problems.",
-    name: "Priya Patel",
-    role: "3rd Year, Electronic Systems",
-    img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&auto=format&fit=crop&crop=face",
-  },
-  {
-    quote:
-      "Being part of Sundarbans gave me confidence I never had. The city meetups especially — meeting fellow students from Delhi changed everything for me.",
-    name: "Rahul Gupta",
-    role: "1st Year, Mathematics",
-    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80&auto=format&fit=crop&crop=face",
-  },
-];
 
 // Meet countdown
 const meetCountdown = ref("Loading...");
@@ -554,11 +511,13 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-:deep(.sec-sub),
+/* Brighten text for transparent backgrounds (over forest image) */
+:deep(.sec-sub), 
 :deep(.desc) {
   color: #ffffff;
 }
 
+/* Maintain muted gold for glassmorphic (blurred) elements to preserve luxury aesthetic */
 .about-section :deep(.desc),
 .about-section :deep(.sec-sub),
 .fcard p,
@@ -569,6 +528,7 @@ onUnmounted(() => {
   color: var(--text2);
 }
 
+/* Specific overrides for HomeView components */
 .tcard p {
   color: var(--text2);
 }

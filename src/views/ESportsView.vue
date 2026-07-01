@@ -19,7 +19,11 @@
           </p>
         </div>
 
-        <div class="events-grid">
+        <!-- Empty state when all upcoming events have passed -->
+        <div v-if="upcomingEvents.length === 0" style="text-align:center;padding:3rem 0;color:var(--text2);">
+          <p style="font-size:1.1rem;">🎮 No upcoming events right now — check back soon!</p>
+        </div>
+        <div v-else class="events-grid">
           <div v-for="event in upcomingEvents" :key="event.id" class="event-card">
             <div class="event-date-badge">
               <span class="event-day">{{ event.day }}</span>
@@ -51,7 +55,7 @@
         </div>
 
         <div class="past-events-grid">
-          <div v-for="event in pastEvents" :key="event.id" class="past-event-card">
+          <div v-for="event in allPastEvents" :key="event.id" class="past-event-card">
             <div class="past-event-img-wrap">
               <!-- Blurred background to fill space and prevent empty black bars -->
               <img :src="event.image" class="past-event-img-blur" aria-hidden="true" />
@@ -72,50 +76,108 @@
       </div>
     </section>
 
-    <!-- Community Team -->
-    <section class="section rs">
+    <!-- Winners -->
+    <section class="section rs" style="background: var(--bg2)">
       <div class="container">
         <div class="section-header">
-          <div class="section-tag esports-tag">The Team</div>
-          <h2 class="section-title-xl">People Behind the <span class="tg-esports">Community</span></h2>
-          <p class="desc" style="max-width: 600px">
-            The leads and members who keep things running.
-          </p>
+          <div class="section-tag esports-tag">Hall of Fame</div>
+          <h2 class="section-title-xl">Event <span class="tg-esports">Winners</span></h2>
+          <p class="desc" style="max-width: 600px">Champions who rose to the top across every tournament and challenge.</p>
         </div>
-
-        <div class="team-grid">
-          <div v-for="member in team" :key="member.name" class="team-card">
-            <div class="team-photo-wrap">
-              <img :src="member.photo" :alt="member.name" class="team-photo" />
-              <div class="team-overlay">
-                <h4 class="team-name">{{ member.name }}</h4>
-                <span class="team-city">📍 {{ member.city }}</span>
-              </div>
+        <div class="winners-grid">
+          <div v-for="event in eventWinners" :key="event.id" class="winner-card">
+            <div class="winner-card-header">
+              <span class="winner-event-tag">{{ event.type }}</span>
+              <h3 class="winner-event-title">{{ event.title }}</h3>
             </div>
-            <div class="team-footer">
-              <p class="team-course">{{ member.role }} · {{ member.track }}</p>
-              <div class="team-socials">
-                <a :href="member.email" class="social-btn" title="Email">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                </a>
-                <a :href="member.linkedin" class="social-btn" title="LinkedIn" target="_blank">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                </a>
-                <a :href="member.instagram" class="social-btn" title="Instagram" target="_blank">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                </a>
-              </div>
+            <div v-if="event.noWinner" class="no-winner">
+              <span class="no-winner-icon">—</span>
+              <span>No winner recorded</span>
             </div>
+            <ul v-else class="winners-list">
+              <li v-for="(winner, index) in event.winners" :key="index" class="winner-row">
+                <span class="winner-rank">{{ index + 1 }}</span>
+                <div class="winner-info">
+                  <span class="winner-name">{{ winner.name }}</span>
+                  <span class="winner-email" v-if="winner.email">{{ winner.email }}</span>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- Community Team -->
+    <!-- Community Team -->
+<section class="section rs">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag esports-tag">The Team</div>
+      <h2 class="section-title-xl">
+        People Behind the <span class="tg-esports">Community</span>
+      </h2>
+      <p class="desc" style="max-width: 600px">
+        The leads and members who keep things running.
+      </p>
+    </div>
+
+    <div class="team-grid">
+      <div v-for="member in team" :key="member.name" class="team-card">
+        
+        <div class="team-photo-wrap">
+          <img :src="member.photo" :alt="member.name" class="team-photo" />
+          
+          <div class="team-overlay">
+            <h4 class="team-name">{{ member.name }}</h4>
+          </div>
+        </div>
+
+        <div class="team-footer">
+          <p class="team-course">
+            {{ member.role }} · {{ member.level }}
+          </p>
+
+          <div class="team-socials">
+            <!-- Email -->
+            <a :href="member.email" class="social-btn" title="Email">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+            </a>
+
+            <!-- LinkedIn -->
+            <a :href="member.linkedin" class="social-btn" title="LinkedIn" target="_blank">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                <rect x="2" y="9" width="4" height="12"/>
+                <circle cx="4" cy="4" r="2"/>
+              </svg>
+            </a>
+
+            <!-- Instagram -->
+            <a :href="member.instagram" class="social-btn" title="Instagram" target="_blank">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+              </svg>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
   </div>
 </template>
 
 <script setup>
 import PageHero from "../components/PageHero.vue";
 import { useScrollReveal } from "../composables/useAnimations.js";
+import { useEventDateFilter } from "../composables/useEventDateFilter.js";
 
 import imgBgmiShowdown from "../assets/Community Events/E-Sports/BGMI Showdown 2025.jpeg";
 import imgBtb from "../assets/Community Events/E-Sports/Back to Bachpan.jpeg";
@@ -131,7 +193,10 @@ import imgOpenMic from "../assets/Community Events/E-Sports/Open Mic.jpeg";
 
 useScrollReveal();
 
-const upcomingEvents = [
+// ─── All upcoming events ───────────────────────────────────────────────────
+// Add `dateISO: 'YYYY-MM-DD'` OR use `day`/`month` for auto-migration.
+// Once the date passes the event moves to Past Events automatically.
+const _upcomingRaw = [
   {
     id: 1,
     title: "Valorant 5v5 House Tournament",
@@ -167,7 +232,8 @@ const upcomingEvents = [
   },
 ];
 
-const pastEvents = [
+// ─── Static past events ────────────────────────────────────────────────────
+const _pastRaw = [
   {
     id: 1,
     title: "Sundarbans House BGMI Showdown 2025",
@@ -269,46 +335,107 @@ const pastEvents = [
   }
 ];
 
+// Apply dynamic date-checking: upcoming → past when date passes
+const { upcomingEvents, allPastEvents } = useEventDateFilter(_upcomingRaw, _pastRaw);
+
+const eventWinners = [
+  {
+    id: 1, title: "Free Fire – Battle of Legends", type: "Tournament", noWinner: false,
+    winners: [
+      { name: "Bhoopendra Chandel", email: "23f3000441@es.study.iitm.ac.in" },
+      { name: "Agampreet Singh",    email: "24f2002079@ds.study.iitm.ac.in" },
+      { name: "Aditya Chaubey",     email: "25f2008372@ds.study.iitm.ac.in" },
+      { name: "Alok Chaubey",       email: "24f2006338@ds.study.iitm.ac.in" },
+    ],
+  },
+  {
+    id: 2, title: "BGMI Showdown 2025", type: "Tournament", noWinner: false,
+    winners: [
+      { name: "Divyansh Chandra", email: "25f2002300@ds.study.iitm.ac.in" },
+      { name: "Sumit Singhal",    email: "24f2003662@ds.study.iitm.ac.in" },
+    ],
+  },
+  {
+    id: 3, title: "Valorant Tournament", type: "Tournament", noWinner: true, winners: [],
+  },
+  {
+    id: 4, title: "Great Chess Competition", type: "Competition", noWinner: false,
+    winners: [
+      { name: "Syan Das",                    email: "25f2007719@ds.study.iitm.ac.in" },
+      { name: "Pradip Boro",                 email: "25f2001618@ds.study.iitm.ac.in" },
+      { name: "Daggubati Bapaiah Chowdary",  email: "25f3100064@es.study.iitm.ac.in" },
+    ],
+  },
+  {
+    id: 5, title: "Sports Quiz Showdown", type: "Quiz", noWinner: false,
+    winners: [
+      { name: "Naren Sampath",     email: "25f3001304@ds.study.iitm.ac.in" },
+      { name: "Sai Rajith Ponnuru", email: "25f3100110@ds.study.iitm.ac.in" },
+    ],
+  },
+  {
+    id: 6, title: "Back to Bachpan", type: "Casual Event", noWinner: false,
+    winners: [
+      { name: "Shaik Neeha Jasmine", email: "25f3100078@es.study.iitm.ac.in" },
+      { name: "Aditri Bordoloi",     email: "25f2008346@ds.study.iitm.ac.in" },
+      { name: "Aarya",               email: "25f1000637@ds.study.iitm.ac.in" },
+    ],
+  },
+  {
+    id: 7, title: "IPL Auction – Sundarbans Edition", type: "Strategy Event", noWinner: false,
+    winners: [
+      { name: "Chandigarh Region", email: "" },
+      { name: "Kolkata Region",    email: "" },
+      { name: "Lucknow Region",    email: "" },
+    ],
+  },
+  {
+    id: 8, title: "Open Mic – Feedback Session", type: "Feedback Session", noWinner: true, winners: [],
+  },
+  {
+    id: 9, title: "Chess Showdown", type: "Competition", noWinner: false,
+    winners: [
+      { name: "Plavit Chandalia", email: "25f2000710@ds.study.iitm.ac.in" },
+      { name: "Ashish Kumar",     email: "25f1002782@ds.study.iitm.ac.in" },
+      { name: "Divyansh Tiwari",  email: "22f3001534@ds.study.iitm.ac.in" },
+    ],
+  },
+  {
+    id: 10, title: "BGMI Tournament", type: "Tournament", noWinner: false,
+    winners: [
+      { name: "Abdul Kadir", email: "25f2000502@ds.study.iitm.ac.in" },
+    ],
+  },
+  {
+    id: 11, title: "Sports Quiz", type: "Quiz", noWinner: false,
+    winners: [
+      { name: "Bhavana S",            email: "25f3001430@ds.study.iitm.ac.in" },
+      { name: "Neeha Jasmine Shaik",  email: "25f3100078@es.study.iitm.ac.in" },
+    ],
+  },
+  {
+    id: 12, title: "Free Fire", type: "Tournament", noWinner: true, winners: [],
+  },
+];
+
 const team = [
   {
-    name: "Vivaan Singh",
-    role: "Community Lead",
-    track: "Valorant",
-    city: "Delhi",
+    name: "Aviral Trivedi",
+    role: "Co-Head",
+    level: "Diploma - Data Science",
     photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80&auto=format&fit=crop&crop=face",
-    email: "mailto:vivaan@sundarbans.in",
-    linkedin: "#",
-    instagram: "#",
+    email: "mailto:24f3004641@ds.study.iitm.ac.in",
+    linkedin: "https://www.linkedin.com/in/aviral-trivedi0",
+    instagram: "https://www.instagram.com/_aviraltrivedi0?igsh=bjEzY2VibWtldm01",
   },
   {
-    name: "Tanya Reddy",
-    role: "Tournament Director",
-    track: "BGMI",
-    city: "Hyderabad",
-    photo: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=400&q=80&auto=format&fit=crop&crop=face",
-    email: "mailto:tanya@sundarbans.in",
-    linkedin: "#",
-    instagram: "#",
-  },
-  {
-    name: "Aman Joshi",
-    role: "Strategy Coach",
-    track: "Chess & FPS",
-    city: "Pune",
-    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80&auto=format&fit=crop&crop=face",
-    email: "mailto:aman@sundarbans.in",
-    linkedin: "#",
-    instagram: "#",
-  },
-  {
-    name: "Riya Menon",
-    role: "Community Manager",
-    track: "Operations",
-    city: "Kochi",
-    photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80&auto=format&fit=crop&crop=face",
-    email: "mailto:riya@sundarbans.in",
-    linkedin: "#",
-    instagram: "#",
+    name: "Ashutosh Singh",
+    role: "Co-Head",
+    level: "Diploma - Data Science",
+    photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80&auto=format&fit=crop&crop=face",
+    email: "mailto:22f2000770@ds.study.iitm.ac.in ",
+    linkedin: "https://www.linkedin.com/in/yuddhraj",
+    instagram: "https://www.instagram.com/the._.ashutosh._.singh?igsh=Nm5oeGVzbXM4cm9i",
   },
 ];
 </script>
@@ -723,4 +850,103 @@ const team = [
     box-shadow: 0 0 25px rgba(220, 38, 38, 0.10);
   }
 }
+/* ─── Winners ─── */
+.winners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.winner-card {
+  position: relative;
+  background: rgba(15, 10, 10, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 10px;
+  padding: 1.5rem 1.5rem 1.5rem 1.8rem;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.winner-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #DC2626, #F97316);
+  box-shadow: 0 0 10px #DC2626;
+}
+
+.winner-card:hover {
+  border-color: rgba(220, 38, 38, 0.45);
+  box-shadow: 0 10px 30px rgba(220, 38, 38, 0.12);
+}
+
+.winner-card-header { margin-bottom: 1.1rem; }
+
+.winner-event-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+  background: rgba(220, 38, 38, 0.1);
+  color: #EF4444;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.winner-event-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #e0e0e0;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.winners-list {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+
+.winner-row {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 6px;
+  background: rgba(220, 38, 38, 0.05);
+  border: 1px solid rgba(220, 38, 38, 0.1);
+  transition: background 0.2s;
+}
+.winner-row:hover { background: rgba(220, 38, 38, 0.1); }
+
+.winner-rank {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  font-size: 0.72rem; font-weight: 800;
+  flex-shrink: 0;
+}
+.winner-row:nth-child(1) .winner-rank { background: rgba(250,204,21,0.15); color: #facc15; border: 1px solid rgba(250,204,21,0.4); }
+.winner-row:nth-child(2) .winner-rank { background: rgba(148,163,184,0.15); color: #94a3b8; border: 1px solid rgba(148,163,184,0.4); }
+.winner-row:nth-child(3) .winner-rank { background: rgba(180,120,60,0.15); color: #cd7f32; border: 1px solid rgba(180,120,60,0.4); }
+.winner-row:nth-child(n+4) .winner-rank { background: rgba(220,38,38,0.1); color: #EF4444; border: 1px solid rgba(220,38,38,0.3); }
+
+.winner-info { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.winner-name { font-size: 0.88rem; font-weight: 600; color: #e0e0e0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.winner-email { font-size: 0.68rem; color: rgba(220, 38, 38, 0.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.no-winner {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.02);
+  border: 1px dashed rgba(255,255,255,0.1);
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.3);
+  font-style: italic;
+}
+.no-winner-icon { color: rgba(255,255,255,0.2); }
 </style>

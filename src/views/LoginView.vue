@@ -3,44 +3,33 @@
     <canvas ref="canvasEl" id="bg-canvas"></canvas>
     <div class="grain"></div>
 
-    <div class="layout">
+      <div class="layout">
       <div class="left-panel">
-        <div class="brand">
-          <div class="brand-icon">🌿</div>
-          <span class="brand-name">Sundarbans</span>
-          <router-link to="/" class="home-link">Home</router-link>
-        </div>
-
         <div class="heading-block">
           <div class="heading-label">Member Portal</div>
           <h1>Welcome<br /><em>back.</em></h1>
           <p class="sub-text">
-            Access the Sundarbans House community.<br />Exclusive to IIT Madras
-            BS Programme members.
+            Access the Sundarbans House Lounge.<br />Exclusive to SUNDARBANS HOUSE members.<br /> Log in with Student E-mail ID
           </p>
         </div>
 
         <div class="form-block">
-          <div class="input-wrapper">
-            <label>IITM Email Address</label>
-            <input
-              v-model="email"
-              type="email"
-              class="input-field"
-              placeholder="yourroll@ds.study.iitm.ac.in"
-              autocomplete="email"
-              @keyup.enter="login" />
-          </div>
-
-          <button class="login-btn" :class="{ loading }" @click="login">
-            Enter the Lounge
+          <button
+            type="button"
+            class="google-btn"
+            :class="{ loading: googleLoading }"
+            @click="loginWithGoogle">
+            <svg class="google-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84c-.21 1.12-.84 2.07-1.8 2.71v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.61z" />
+              <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.81.55-1.85.87-3.04.87-2.34 0-4.32-1.58-5.03-3.71H.96v2.33C2.44 15.98 5.48 18 9 18z" />
+              <path fill="#FBBC05" d="M3.97 10.72c-.18-.55-.28-1.13-.28-1.72s.1-1.17.28-1.72V4.95H.96A8.996 8.996 0 0 0 0 9c0 1.45.35 2.83.96 4.05l3.01-2.33z" />
+              <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.42 0 9 0 5.48 0 2.44 2.02.96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z" />
+            </svg>
+            <span>{{ googleLoading ? "Connecting..." : "Continue with Google" }}</span>
           </button>
           <p class="message" :class="messageType">{{ message }}</p>
         </div>
 
-        <p class="footer-text">
-          Sundarbans House · IIT Madras BS Programme · Est. 2021
-        </p>
       </div>
 
       <div class="right-panel">
@@ -116,10 +105,8 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import membersData from "../../sundarbans/members.json";
+import membersData from "../data/members.json";
 
-const email = ref("");
-const loading = ref(false);
 const message = ref("");
 const router = useRouter();
 
@@ -128,30 +115,88 @@ const messageType = computed(() => {
   return message.value.toLowerCase().includes("welcome") ? "success" : "error";
 });
 
-function login() {
-  if (!email.value || !email.value.includes("@")) {
-    message.value = "Please enter a valid IITM email address.";
+function grantOrDenyAccess(rawEmail) {
+  const normalized = rawEmail.trim().toLowerCase();
+  if (membersData.members.includes(normalized)) {
+    message.value = "Welcome to the Members Lounge. Redirecting...";
+    localStorage.setItem("sundarbans_auth_token", normalized);
+    setTimeout(() => {
+      router.push("/lounge");
+    }, 500);
+    return true;
+  }
+  message.value = "Access denied. Email not found in member registry.";
+  return false;
+}
+
+// ── GOOGLE SIGN-IN ───────────────────────────────────────────────────────
+// Client-side only (Google Identity Services OAuth2 token client). No backend
+// verifies the token signature here, so this provides the same level of
+// security as the manual flow above: none. It only swaps "type your email"
+// for "pick your Google account", then runs the same members.json check.
+const googleLoading = ref(false);
+let tokenClient = null;
+let googleInitAttempts = 0;
+
+function initGoogle() {
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  if (!clientId || clientId.includes("your-client-id")) return;
+
+  if (!window.google?.accounts?.oauth2) {
+    googleInitAttempts += 1;
+    if (googleInitAttempts < 25) setTimeout(initGoogle, 200); // ~5s max wait
     return;
   }
-  
-  loading.value = true;
-  message.value = "";
-  
-  setTimeout(() => {
-    loading.value = false;
-    
-    // Check against members database
-    if (membersData.members.includes(email.value.trim().toLowerCase())) {
-      message.value = "Welcome to the Members Lounge. Redirecting...";
-      // Simulate stored token
-      localStorage.setItem("sundarbans_auth_token", email.value);
-      setTimeout(() => {
-        router.push("/lounge");
-      }, 500);
-    } else {
-      message.value = "Access denied. Email not found in member registry.";
+
+  tokenClient = window.google.accounts.oauth2.initTokenClient({
+    client_id: clientId,
+    scope: "openid email profile",
+    callback: handleGoogleToken,
+    error_callback: () => {
+      googleLoading.value = false;
+      message.value = "Google sign-in was cancelled or failed.";
+    },
+  });
+}
+
+async function handleGoogleToken(tokenResponse) {
+  if (!tokenResponse?.access_token) {
+    googleLoading.value = false;
+    message.value = "Google sign-in failed. Please try again.";
+    return;
+  }
+  try {
+    const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+      headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+    });
+    if (!res.ok) throw new Error("userinfo request failed");
+    const profile = await res.json();
+    googleLoading.value = false;
+    if (!profile.email) {
+      message.value = "Could not read your Google account email.";
+      return;
     }
-  }, 900);
+    grantOrDenyAccess(profile.email);
+  } catch (err) {
+    googleLoading.value = false;
+    message.value = "Couldn't reach Google. Check your connection and try again.";
+  }
+}
+
+function loginWithGoogle() {
+  message.value = "";
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+  if (!clientId || clientId.includes("your-client-id")) {
+    message.value = "Google sign-in isn't configured yet (missing client ID).";
+    return;
+  }
+  if (!tokenClient) {
+    message.value = "Google sign-in is still loading. Try again in a second.";
+    return;
+  }
+  googleLoading.value = true;
+  tokenClient.requestAccessToken();
 }
 
 const canvasEl = ref(null);
@@ -208,7 +253,10 @@ function initCanvas() {
   });
 }
 
-onMounted(initCanvas);
+onMounted(() => {
+  initCanvas();
+  initGoogle();
+});
 </script>
 
 <style scoped>
@@ -247,28 +295,6 @@ onMounted(initCanvas);
   padding: 80px 70px;
   position: relative;
 }
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 70px;
-}
-.brand-icon {
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(201, 168, 76, 0.5);
-  border-radius: 8px;
-  display: grid;
-  place-items: center;
-}
-.brand-name,
-.home-link {
-  color: #c9a84c;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  font-size: 12px;
-  text-decoration: none;
-}
 .heading-label {
   font-size: 11px;
   letter-spacing: 0.3em;
@@ -292,42 +318,6 @@ h1 em {
   color: rgba(245, 240, 232, 0.45);
   line-height: 1.7;
 }
-.input-wrapper label {
-  display: block;
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(245, 240, 232, 0.45);
-  margin-bottom: 10px;
-}
-.input-field {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  padding: 16px 20px;
-  color: #f5f0e8;
-}
-.input-field:focus {
-  outline: none;
-  border-color: rgba(201, 168, 76, 0.5);
-}
-.login-btn {
-  width: 100%;
-  margin-top: 12px;
-  padding: 18px 24px;
-  background: #c9a84c;
-  color: #080a08;
-  border: none;
-  border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-weight: 600;
-}
-.login-btn.loading {
-  opacity: 0.7;
-  pointer-events: none;
-}
 .message {
   margin-top: 16px;
   min-height: 20px;
@@ -338,6 +328,35 @@ h1 em {
 }
 .message.success {
   color: #7dba7d;
+}
+.google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #f5f0e8;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.google-btn:hover {
+  border-color: rgba(201, 168, 76, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+}
+.google-btn.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+.google-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 .footer-text {
   margin-top: 60px;

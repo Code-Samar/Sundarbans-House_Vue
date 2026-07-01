@@ -1,27 +1,10 @@
-# Logs and databases
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
 node_modules
-dist
-dist-ssr
-*.local
+project_files
+dist/
+scratch/
+.env
+.env.local
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-project-files/
-project files/
+# Ignore raw CSV exports and manifest CSVs
+**/*.csv
+src/views/meetups/region_exports_json_and_csv/csv/

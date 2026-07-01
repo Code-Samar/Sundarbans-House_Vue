@@ -179,9 +179,9 @@
                   <span class="past-stat-lbl">Community Event</span>
                 </div>
               </div>
-              <div class="past-photos">
-                <div v-for="n in 5" :key="n" class="ph">
-                  <img :src="houseSrc" alt="" loading="lazy">
+              <div class="past-photos" v-if="meetup.photos && meetup.photos.length > 0">
+                <div v-for="(photo, index) in meetup.photos" :key="index" class="ph">
+                  <img :src="photo" alt="" loading="lazy" referrerpolicy="no-referrer">
                   <div class="ph-ov"></div>
                 </div>
               </div>
@@ -451,5 +451,16 @@ export default {
   .past-photos .ph:first-child { grid-row:auto; }
   .past-photos .ph { height:140px; }
   .past-stats { grid-template-columns:1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .hero-stats { flex-wrap: wrap; gap: 16px; }
+  .hstat-div { display: none; }
+  .stats-row { grid-template-columns: 1fr; }
+  .past-stats { grid-template-columns: 1fr; }
+  .upcoming-info { padding: 24px 16px; }
+  .upcoming-register { padding: 24px 16px; }
+  .past-card-head { padding: 24px 16px 0; }
+  .past-about { padding: 0 16px 18px; }
+  .past-card-footer { padding: 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
 }
 </style>

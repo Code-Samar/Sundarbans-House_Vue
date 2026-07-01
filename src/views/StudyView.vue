@@ -5,356 +5,317 @@
       breadcrumb-title="Study Corner"
       title="Study"
       accent-title="Corner"
-      subtitle="Comprehensive academic resources for Foundation, Diploma and BS level students"
-    />
+      subtitle="Comprehensive academic resources for Foundation, Diploma and BS level students" />
 
     <section class="section rs" style="background: var(--bg2)" id="levelPicker">
       <div class="container">
-        <div class="sec-hdr" id="scHeader">
-          <div class="section-tag">Step 1 - Choose Your Level</div>
-          <h2 class="section-title-xl">
-            Study Resources <span class="tg">by Level</span>
-          </h2>
-        </div>
-
-        <div class="sc-levels-grid rs" id="scLevelsContainer">
-          <div
-            v-for="level in visibleLevels"
-            :key="level.key"
-            class="card-base sc-level-card"
-            :class="{ active: currentLevel === level.key }"
-            @click="loadLevel(level.key)">
-            <div class="sc-card-emoji">{{ level.emoji }}</div>
-            <h3 class="sc-card-title">{{ level.title }}</h3>
-            <p class="desc sc-card-desc">{{ level.description }}</p>
-            <div class="sc-card-stats">
-              <span class="sc-stat-badge"
-                >{{ (scData[level.key] || []).length }} subjects</span
-              >
-              <span class="sc-stat-badge">Notes + PYQs</span>
-            </div>
-            <span class="submit-btn sc-browse-btn">Browse Subjects -&gt;</span>
-          </div>
-        </div>
-
-        <div class="sc-mid-search-wrap">
-          <div class="sc-mid-search-row">
-            <div class="sc-search-input-wrap">
-              <input
-                v-model="search"
-                type="text"
-                placeholder="Search subjects, notes, PYQs, or doubts..."
-                class="form-input sc-mid-search-input" />
-              <svg
-                class="sc-mid-search-icon"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2">
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
-            </div>
-            <div class="filter-tabs sc-mid-tabs">
-              <div
-                class="ftab"
-                v-for="tab in tabs"
-                :key="tab"
-                :class="{ active: activeTab === tab }"
-                @click="activeTab = tab">
-                {{ tab }}
+        <div class="sc-layout">
+          <!-- LEFT: Level cards (vertical sidebar) -->
+          <div class="sc-sidebar">
+            <div class="sc-sidebar-hdr">
+              <div class="section-tag" style="margin-bottom: 0">
+                Choose Level
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section
-      class="section rs"
-      id="scResourceSection"
-      v-show="Boolean(currentLevel)">
-      <div class="container">
-        <div class="sc-subject-strip" id="scSubjectStrip">
-          <div class="sc-strip-header">
-            <span class="sc-strip-label"
-              >{{ currentLevelLabel }} - Subjects</span
-            >
-            <button class="sc-back-btn" @click="resetLevel">
-              &larr; All Levels
-            </button>
-          </div>
-          <div class="sc-badges-row" id="scSubjectList">
-            <button
-              v-for="subject in filteredSubjects"
-              :key="subject.code"
-              class="sc-subj-badge"
-              :class="{ active: currentSubject?.code === subject.code }"
-              @click="selectSubject(subject)">
-              {{ subject.subject }}
-            </button>
-          </div>
-        </div>
-
-        <div
-          style="
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 0 0 16px 16px;
-            padding: 2rem;
-            min-height: 420px;
-            border-top: none;
-          "
-          id="scPanel">
-          <template v-if="currentSubject">
-            <div style="margin-bottom: 0.25rem">
-              <div class="section-tag" style="margin-bottom: 0.5rem">
-                {{ currentSubject.code }}
-              </div>
-              <p
-                style="
-                  font-size: 0.8rem;
-                  color: var(--text3);
-                  letter-spacing: 0.03em;
-                ">
-                {{ currentSubject.description }}
-              </p>
-            </div>
-
-            <div class="sc-tab-bar">
-              <button
-                class="sc-tab"
-                :class="{ active: currentResourceType === 'lectures' }"
-                @click="currentResourceType = 'lectures'">
-                📺 Lectures
-              </button>
-              <button
-                class="sc-tab"
-                :class="{ active: currentResourceType === 'notes' }"
-                @click="currentResourceType = 'notes'">
-                📝 Notes
-              </button>
-              <button
-                class="sc-tab"
-                :class="{ active: currentResourceType === 'pyq' }"
-                @click="currentResourceType = 'pyq'">
-                📄 PYQs
-              </button>
-            </div>
-
-            <template
-              v-if="currentResourceType === 'notes' && groupedNotes.length">
+            <div class="sc-sidebar-cards">
               <div
-                class="sc-author-card"
-                v-for="(group, index) in groupedNotes"
-                :key="group.author">
-                <div class="sc-author-header" @click="toggleAuthor(index)">
-                  <span class="sc-author-name"
-                    >✦ {{ group.author }}
-                    <span class="sc-author-count"
-                      >({{ group.items.length }}
-                      {{ group.items.length === 1 ? "note" : "notes" }})</span
-                    ></span
+                v-for="level in levelMeta"
+                :key="level.key"
+                class="sc-sidebar-card"
+                :class="{ active: currentLevel === level.key }"
+                @click="loadLevel(level.key)">
+                <div class="sc-sidebar-card-top">
+                  <span class="sc-sidebar-emoji">{{ level.emoji }}</span>
+                  <div class="sc-sidebar-meta">
+                    <h3 class="sc-card-title">{{ level.title }}</h3>
+                    <p class="sc-card-desc">{{ level.description }}</p>
+                  </div>
+                </div>
+                <div class="sc-card-stats">
+                  <span class="sc-stat-badge"
+                    >{{ (scData[level.key] || []).length }} subjects</span
                   >
+                  <span class="sc-stat-badge">Notes + PYQs</span>
+                </div>
+                <div class="sc-sidebar-arrow">
                   <svg
-                    class="sc-author-chevron"
-                    :style="{
-                      transform: openAuthors[index]
-                        ? 'rotate(180deg)'
-                        : 'rotate(0deg)',
-                    }"
                     width="16"
                     height="16"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
+                    stroke-width="2.5">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </div>
-                <div
-                  class="sc-author-body"
-                  :class="{ open: openAuthors[index] }">
-                  <div class="sc-author-notes">
-                    <a
-                      v-for="item in group.items"
-                      :key="item.title"
-                      :href="item.link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="sc-resource-item">
-                      <span>{{ cleanTitle(item.title) }}</span>
-                      <div
-                        style="
-                          display: flex;
-                          align-items: center;
-                          gap: 0.75rem;
-                        ">
-                        <span v-if="item.badge" class="sc-badge">{{
-                          item.badge
-                        }}</span>
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          style="color: var(--text3)">
-                          <path d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                    </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Content panel -->
+          <div class="sc-panel-wrap">
+            <!-- Search + tabs always visible -->
+            <div class="sc-panel-search">
+              <div class="sc-search-input-wrap">
+                <input
+                  v-model="search"
+                  type="text"
+                  placeholder="Search subjects, notes, PYQs..."
+                  class="form-input sc-mid-search-input" />
+                <svg
+                  class="sc-mid-search-icon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Empty state: no level selected -->
+            <div v-if="!currentLevel" class="sc-panel-empty">
+              <div style="font-size: 3rem; margin-bottom: 1rem">📚</div>
+              <p style="font-size: 1rem; color: var(--text2)">
+                Select a level on the left to browse subjects
+              </p>
+            </div>
+
+            <!-- Level selected: subjects + resources -->
+            <template v-else>
+              <div class="sc-panel-body">
+                <!-- Subject strip -->
+                <div class="sc-subject-strip" id="scSubjectStrip">
+                  <div class="sc-strip-header">
+                    <span class="sc-strip-label"
+                      >{{ currentLevelLabel }} — Subjects</span
+                    >
+                    <button class="sc-back-btn" @click="resetLevel">
+                      &larr; Clear
+                    </button>
+                  </div>
+                  <div class="sc-badges-row" id="scSubjectList">
+                    <button
+                      v-for="subject in filteredSubjects"
+                      :key="subject.code"
+                      class="sc-subj-badge"
+                      :class="{ active: currentSubject?.code === subject.code }"
+                      @click="selectSubject(subject)">
+                      {{ subject.subject }}
+                    </button>
                   </div>
                 </div>
-              </div>
-            </template>
 
-            <template
-              v-else-if="currentResourceType === 'pyq' && groupedPyq.length">
-              <div
-                class="sc-year-group"
-                v-for="group in groupedPyq"
-                :key="group.year">
-                <div class="sc-year-label">
-                  📅 {{ group.year }}
-                  <span class="sc-year-count"
-                    >({{ group.items.length }} papers)</span
-                  >
+                <!-- Resource panel -->
+                <div class="sc-resource-panel" id="scPanel">
+                  <template v-if="currentSubject">
+                    <div style="margin-bottom: 0.25rem">
+                      <div class="section-tag" style="margin-bottom: 0.5rem">
+                        {{ currentSubject.code }}
+                      </div>
+                      <p
+                        style="
+                          font-size: 0.8rem;
+                          color: var(--text3);
+                          letter-spacing: 0.03em;
+                        ">
+                        {{ currentSubject.description }}
+                      </p>
+                    </div>
+
+                    <div class="sc-tab-bar">
+                      <button
+                        class="sc-tab"
+                        :class="{ active: currentResourceType === 'lectures' }"
+                        @click="currentResourceType = 'lectures'">
+                        📺 Lectures
+                      </button>
+                      <button
+                        class="sc-tab"
+                        :class="{ active: currentResourceType === 'notes' }"
+                        @click="currentResourceType = 'notes'">
+                        📝 Notes
+                      </button>
+                      <button
+                        class="sc-tab"
+                        :class="{ active: currentResourceType === 'pyq' }"
+                        @click="currentResourceType = 'pyq'">
+                        📄 PYQs
+                      </button>
+                    </div>
+
+                    <template
+                      v-if="
+                        currentResourceType === 'notes' && groupedNotes.length
+                      ">
+                      <div
+                        class="sc-author-card"
+                        v-for="(group, index) in groupedNotes"
+                        :key="group.author">
+                        <div
+                          class="sc-author-header"
+                          @click="toggleAuthor(index)">
+                          <span class="sc-author-name"
+                            >✦ {{ group.author }}
+                            <span class="sc-author-count"
+                              >({{ group.items.length }}
+                              {{
+                                group.items.length === 1 ? "note" : "notes"
+                              }})</span
+                            >
+                          </span>
+                          <svg
+                            class="sc-author-chevron"
+                            :style="{
+                              transform: openAuthors[index]
+                                ? 'rotate(180deg)'
+                                : 'rotate(0deg)',
+                            }"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M6 9l6 6 6-6" />
+                          </svg>
+                        </div>
+                        <div
+                          class="sc-author-body"
+                          :class="{ open: openAuthors[index] }">
+                          <div class="sc-author-notes">
+                            <a
+                              v-for="item in group.items"
+                              :key="item.title"
+                              :href="item.link"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="sc-resource-item">
+                              <span>{{ cleanTitle(item.title) }}</span>
+                              <div
+                                style="
+                                  display: flex;
+                                  align-items: center;
+                                  gap: 0.75rem;
+                                ">
+                                <span v-if="item.badge" class="sc-badge">{{
+                                  item.badge
+                                }}</span>
+                                <svg
+                                  width="14"
+                                  height="14"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  stroke-width="2"
+                                  style="color: var(--text3)">
+                                  <path d="M5 12h14M12 5l7 7-7 7" />
+                                </svg>
+                              </div>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
+
+                    <template
+                      v-else-if="
+                        currentResourceType === 'pyq' && groupedPyq.length
+                      ">
+                      <div
+                        class="sc-year-group"
+                        v-for="group in groupedPyq"
+                        :key="group.year">
+                        <div class="sc-year-label">
+                          {{
+                            group.year === "Google Drive Folder" ? "🗂️" : "📅"
+                          }}
+                          {{ group.year }}
+                          <span class="sc-year-count"
+                            >({{ group.items.length }}
+                            {{
+                              group.year === "Google Drive Folder"
+                                ? "folder"
+                                : "papers"
+                            }})</span
+                          >
+                        </div>
+                        <a
+                          v-for="item in group.items"
+                          :key="item.title"
+                          :href="item.link"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="sc-resource-item">
+                          <span>{{ cleanTitle(item.title) }}</span>
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            style="color: var(--text3)">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                          </svg>
+                        </a>
+                      </div>
+                    </template>
+
+                    <template v-else-if="filteredResources.length">
+                      <a
+                        v-for="item in filteredResources"
+                        :key="item.title"
+                        :href="item.link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="sc-resource-item">
+                        <span>{{ cleanTitle(item.title) }}</span>
+                        <div
+                          style="
+                            display: flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                          ">
+                          <span v-if="item.badge" class="sc-badge">{{
+                            item.badge
+                          }}</span>
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            style="color: var(--text3)">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      </a>
+                    </template>
+
+                    <div v-else class="sc-empty">
+                      <div style="font-size: 2rem">🔍</div>
+                      <p style="font-size: 0.85rem">
+                        No matching resources found.
+                      </p>
+                    </div>
+                  </template>
+
+                  <div v-else class="sc-empty">
+                    <div style="font-size: 3rem">📖</div>
+                    <p style="font-size: 0.9rem">
+                      Select a subject above to view resources
+                    </p>
+                  </div>
                 </div>
-                <a
-                  v-for="item in group.items"
-                  :key="item.title"
-                  :href="item.link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="sc-resource-item">
-                  <span>{{ cleanTitle(item.title) }}</span>
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    style="color: var(--text3)">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </a>
+                <!-- /sc-resource-panel -->
               </div>
+              <!-- /sc-panel-body -->
             </template>
-
-            <template v-else-if="filteredResources.length">
-              <a
-                v-for="item in filteredResources"
-                :key="item.title"
-                :href="item.link"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="sc-resource-item">
-                <span>{{ cleanTitle(item.title) }}</span>
-                <div style="display: flex; align-items: center; gap: 0.75rem">
-                  <span v-if="item.badge" class="sc-badge">{{
-                    item.badge
-                  }}</span>
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    style="color: var(--text3)">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </a>
-            </template>
-
-            <div v-else class="sc-empty">
-              <div style="font-size: 2rem">🔍</div>
-              <p style="font-size: 0.85rem">No matching resources found.</p>
-            </div>
-          </template>
-
-          <div v-else class="sc-empty">
-            <div style="font-size: 3rem">📖</div>
-            <p style="font-size: 0.9rem">Select a subject to view resources</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section
-      class="section rs"
-      style="background: var(--bg2)"
-      id="studentTools">
-      <div class="container">
-        <div class="sec-hdr">
-          <div class="section-tag">Student Tools</div>
-          <h2 class="section-title-xl">
-            Handy <span class="tg">tools</span> for studying
-          </h2>
-        </div>
-        <div class="grid-3" style="margin-bottom: 1.5rem">
-          <div class="card-base rc" style="--card-delay: 0.1s">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem">⏱️</div>
-            <h4 style="font-family: Cinzel, serif; font-weight: 700">
-              Pomodoro Timer
-            </h4>
-            <p class="desc" style="font-size: 0.82rem">
-              Study in focused 25-minute blocks
-            </p>
-            <a
-              href="#"
-              style="
-                color: var(--accent);
-                font-size: 0.82rem;
-                font-weight: 600;
-                text-decoration: none;
-              "
-              >Use Tool -&gt;</a
-            >
-          </div>
-          <div class="card-base rc" style="--card-delay: 0.2s">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem">📝</div>
-            <h4 style="font-family: Cinzel, serif; font-weight: 700">
-              Doubt Board
-            </h4>
-            <p class="desc" style="font-size: 0.82rem">
-              Post your doubts, get peer answers
-            </p>
-            <a
-              href="#doubtBoard"
-              style="
-                color: var(--accent);
-                font-size: 0.82rem;
-                font-weight: 600;
-                text-decoration: none;
-              "
-              >Open Board -&gt;</a
-            >
-          </div>
-          <div class="card-base rc" style="--card-delay: 0.3s">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem">📅</div>
-            <h4 style="font-family: Cinzel, serif; font-weight: 700">
-              Study Planner
-            </h4>
-            <p class="desc" style="font-size: 0.82rem">
-              Plan your week, track your progress
-            </p>
-            <a
-              href="#"
-              style="
-                color: var(--accent);
-                font-size: 0.82rem;
-                font-weight: 600;
-                text-decoration: none;
-              "
-              >Plan Now -&gt;</a
-            >
           </div>
         </div>
       </div>
@@ -437,14 +398,7 @@
           </button>
         </div>
 
-        <div
-          style="
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-width: 820px;
-            margin: 0 auto 3rem;
-          ">
+        <div class="db-scroll-box">
           <template v-if="filteredDoubts.length">
             <div class="db-card" v-for="d in filteredDoubts" :key="d.id">
               <span class="db-tag">{{ d.subject }}</span>
@@ -489,7 +443,12 @@
 
         <div
           class="card-base"
-          style="max-width: 820px; margin: 0 auto; padding: 2.5rem 2rem; text-align: center;">
+          style="
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+            text-align: center;
+          ">
           <h3
             style="
               font-family: Cinzel, serif;
@@ -499,31 +458,262 @@
             ">
             Have a Doubt?
           </h3>
-          <p style="color: var(--text2); margin-bottom: 1.5rem; font-size: 0.95rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-            Submit your doubts anonymously using our Google form. Community members or WebOps will review and post answers on the board.
+          <p
+            style="
+              color: var(--text2);
+              margin-bottom: 1.5rem;
+              font-size: 0.95rem;
+              max-width: 600px;
+              margin-left: auto;
+              margin-right: auto;
+            ">
+            Submit your doubts anonymously using our Google form. Community
+            members or WebOps will review and post answers on the board.
           </p>
           <a
             href="https://forms.gle/vZox3LpVrXti74UH7"
             target="_blank"
             rel="noopener noreferrer"
             class="submit-btn"
-            style="display: inline-block; text-decoration: none;">
+            style="display: inline-block; text-decoration: none">
             Open Doubts Form
           </a>
         </div>
       </div>
     </section>
 
+    <!-- Student Tools -->
+    <section
+      class="section rs"
+      style="background: var(--bg2)"
+      id="studentTools">
+      <div class="container">
+        <div class="sec-hdr">
+          <div class="section-tag">Student Tools</div>
+          <h2 class="section-title-xl">
+            Handy <span class="tg">tools</span> for studying
+          </h2>
+        </div>
+        <div class="grid-4">
+          <div class="card-base rc" style="--card-delay: 0.1s">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem">📊</div>
+            <h4 style="font-family: Cinzel, serif; font-weight: 700">
+              Score Checker
+            </h4>
+            <p class="desc" style="font-size: 0.82rem">
+              Check your exam scores updated by IITM BS after each exam
+            </p>
+            <a
+              href="#"
+              style="
+                color: var(--accent);
+                font-size: 0.82rem;
+                font-weight: 600;
+                text-decoration: none;
+              "
+              >Open Scores -&gt;</a
+            >
+          </div>
+          <div class="card-base rc" style="--card-delay: 0.2s">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem">🧠</div>
+            <h4 style="font-family: Cinzel, serif; font-weight: 700">
+              Practice for Exam
+            </h4>
+            <p class="desc" style="font-size: 0.82rem">
+              Practice quizzes and problems to prepare for your exams
+            </p>
+            <a
+              href="https://quizpractice.space/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style="
+                color: var(--accent);
+                font-size: 0.82rem;
+                font-weight: 600;
+                text-decoration: none;
+              "
+              >Start Practising -&gt;</a
+            >
+          </div>
+          <div class="card-base rc" style="--card-delay: 0.3s">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem">📈</div>
+            <h4 style="font-family: Cinzel, serif; font-weight: 700">
+              Looker Studio
+            </h4>
+            <p class="desc" style="font-size: 0.82rem">
+              Visual dashboards and analytics for IITM BS programme data
+            </p>
+            <a
+              href="https://datastudio.google.com/reporting/d02dac13-665b-49cc-8d51-0451268a6a3e/page/p_zohf4g5z2d?s=i1h4iWCG8o4"
+              target="_blank"
+              rel="noopener noreferrer"
+              style="
+                color: var(--accent);
+                font-size: 0.82rem;
+                font-weight: 600;
+                text-decoration: none;
+              "
+              >View Dashboard -&gt;</a
+            >
+          </div>
+          <div class="card-base rc" style="--card-delay: 0.4s">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem">💻</div>
+            <h4 style="font-family: Cinzel, serif; font-weight: 700">
+              OPPE Portal
+            </h4>
+            <p class="desc" style="font-size: 0.82rem">
+              Online Programming & Problem-solving Evaluation exam portal
+            </p>
+            <a
+              href="https://study.iitm.ac.in/ds/exam.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              style="
+                color: var(--accent);
+                font-size: 0.82rem;
+                font-weight: 600;
+                text-decoration: none;
+              "
+              >Open Portal -&gt;</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Exam Cities Section -->
+    <section class="section rs" id="examCities">
+      <div class="container">
+        <div class="sec-hdr">
+          <div class="section-tag">Exam Info</div>
+          <h2 class="section-title-xl">
+            IITM BS <span class="tg">Exam Cities</span>
+          </h2>
+          <p class="sec-sub">
+            Find your nearest exam centre. Cities are organized by state across
+            India.
+          </p>
+        </div>
+
+        <!-- Search -->
+        <div class="ec-search-wrap">
+          <div
+            class="sc-search-input-wrap"
+            style="max-width: 420px; margin: 0 auto 1.5rem">
+            <input
+              v-model="citySearch"
+              type="text"
+              placeholder="Search city or state..."
+              class="form-input sc-mid-search-input" />
+            <svg
+              class="sc-mid-search-icon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="ec-layout">
+          <!-- LEFT: Region sidebar -->
+          <div class="ec-sidebar">
+            <div class="sc-sidebar-hdr">
+              <div class="section-tag" style="margin-bottom: 0">
+                Choose Region
+              </div>
+            </div>
+            <div class="ec-sidebar-cards">
+              <div
+                v-for="region in examRegionMeta"
+                :key="region.key"
+                class="ec-sidebar-card"
+                :class="{ active: activeRegion === region.key }"
+                @click="selectExamRegion(region.key)">
+                <div class="ec-sidebar-card-top">
+                  <span class="ec-sidebar-emoji">{{ region.emoji }}</span>
+                  <div class="ec-sidebar-meta">
+                    <h3 class="sc-card-title">{{ region.key }}</h3>
+                  </div>
+                </div>
+                <div class="sc-card-stats">
+                  <span class="sc-stat-badge"
+                    >{{ region.stateCount }} states</span
+                  >
+                  <span class="sc-stat-badge"
+                    >{{ region.cityCount }} cities</span
+                  >
+                </div>
+                <div class="ec-sidebar-arrow">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Cities panel -->
+          <div class="ec-panel-wrap">
+            <div v-if="!activeRegion" class="sc-panel-empty">
+              <div style="font-size: 3rem; margin-bottom: 1rem">📍</div>
+              <p style="font-size: 1rem; color: var(--text2)">
+                Select a region on the left to view exam cities
+              </p>
+            </div>
+
+            <div v-else class="ec-panel-body">
+              <div class="ec-strip-header">
+                <span class="sc-strip-label"
+                  >{{ activeRegion }} — Exam Cities</span
+                >
+                <button class="sc-back-btn" @click="resetExamRegion">
+                  &larr; Clear
+                </button>
+              </div>
+
+              <div class="ec-cities-scroll">
+                <div class="ec-grid">
+                  <div
+                    v-for="row in filteredExamCities"
+                    :key="row.state"
+                    class="ec-card card-base">
+                    <div class="ec-state">{{ row.state }}</div>
+                    <div class="ec-cities-list">
+                      <span
+                        v-for="city in row.cities"
+                        :key="city"
+                        class="ec-city-tag"
+                        >{{ city }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="filteredExamCities.length === 0" class="sc-empty">
+                  <div style="font-size: 2.5rem">🔍</div>
+                  <p>No cities found for "{{ citySearch }}"</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section rs" style="background: var(--bg2)">
       <div class="container">
-        <div
-          style="
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            align-items: stretch;
-          "
-          class="sc-contrib-grid">
+        <div style="align-items: stretch" class="sc-contrib-grid grid-2">
           <div
             class="card-base"
             style="
@@ -604,7 +794,7 @@
               target="_blank"
               rel="noopener noreferrer"
               class="submit-btn"
-              style="align-self: flex-start; text-decoration: none;"
+              style="align-self: flex-start; text-decoration: none"
               >Submit a Resource</a
             >
           </div>
@@ -702,8 +892,6 @@
         </div>
       </div>
     </section>
-
-
   </div>
 </template>
 
@@ -715,6 +903,233 @@ import PageHero from "../components/PageHero.vue";
 import scData from "../data/scData_generated.js";
 
 useScrollReveal();
+
+// ─── Exam Cities ─────────────────────────────────────────────────────────────
+const citySearch = ref("");
+const activeRegion = ref(null);
+
+const examCitiesData = [
+  {
+    state: "Andaman & Nicobar Islands",
+    region: "Kolkata",
+    cities: ["Port Blair"],
+  },
+  {
+    state: "Andhra Pradesh",
+    region: "Hyderabad",
+    cities: [
+      "Anantapur",
+      "Bhimavaram",
+      "Guntur",
+      "Kadapa",
+      "Kurnool",
+      "Rajahmundry",
+      "Tirupathi",
+      "Vijayawada",
+      "Vishakhapatnam",
+    ],
+  },
+  { state: "Arunachal Pradesh", region: "Kolkata", cities: ["Naharlagun"] },
+  {
+    state: "Assam",
+    region: "Kolkata",
+    cities: ["Dibrugarh", "Guwahati", "Silchar", "Tezpur"],
+  },
+  {
+    state: "Bihar",
+    region: "Patna",
+    cities: ["Patna", "Bhagalpur", "Gaya", "Muzaffarpur", "Darbhanga"],
+  },
+  { state: "Chhattisgarh", region: "Patna", cities: ["Raipur"] },
+  { state: "Delhi", region: "Delhi", cities: ["Delhi"] },
+  { state: "Goa", region: "Mumbai", cities: ["Panaji"] },
+  {
+    state: "Gujarat",
+    region: "Mumbai",
+    cities: ["Ahmedabad", "Anand", "Rajkot", "Surat", "Vadodara"],
+  },
+  {
+    state: "Haryana",
+    region: "Chandigarh",
+    cities: ["Faridabad", "Gurgaon", "Kurukshetra"],
+  },
+  {
+    state: "Himachal Pradesh",
+    region: "Chandigarh",
+    cities: ["Hamirpur", "Shimla"],
+  },
+  {
+    state: "Jammu & Kashmir",
+    region: "Chandigarh",
+    cities: ["Jammu", "Srinagar"],
+  },
+  {
+    state: "Jharkhand",
+    region: "Patna",
+    cities: ["Dhanbad", "Jamshedpur", "Ranchi"],
+  },
+  {
+    state: "Karnataka",
+    region: "Bengaluru",
+    cities: [
+      "Belgaum",
+      "Bengaluru",
+      "Dharwad",
+      "Gulbarga",
+      "Mangalore",
+      "Mysore",
+    ],
+  },
+  {
+    state: "Kerala",
+    region: "Bengaluru",
+    cities: [
+      "Calicut",
+      "Ernakulam",
+      "Kollam",
+      "Kottayam",
+      "Palakkad",
+      "Thrissur",
+      "Trivandrum",
+    ],
+  },
+  {
+    state: "Madhya Pradesh",
+    region: "Mumbai",
+    cities: ["Bhopal", "Gwalior", "Indore", "Jabalpur"],
+  },
+  {
+    state: "Maharashtra",
+    region: "Mumbai",
+    cities: [
+      "Amravati",
+      "Aurangabad",
+      "Jalgaon",
+      "Kolhapur",
+      "Mumbai",
+      "Nagpur",
+      "Nanded",
+      "Nashik",
+      "Pune",
+      "Solapur",
+    ],
+  },
+  { state: "Manipur", region: "Kolkata", cities: ["Imphal"] },
+  { state: "Meghalaya", region: "Kolkata", cities: ["Shillong"] },
+  { state: "Mizoram", region: "Kolkata", cities: ["Aizawl"] },
+  { state: "Nagaland", region: "Kolkata", cities: ["Dimapur"] },
+  {
+    state: "Odisha",
+    region: "Kolkata",
+    cities: ["Bhubaneswar", "Rourkela", "Sambalpur"],
+  },
+  { state: "Puducherry", region: "Chennai", cities: ["Puducherry"] },
+  {
+    state: "Punjab",
+    region: "Chandigarh",
+    cities: ["Chandigarh", "Jalandhar", "Ludhiana", "Amritsar"],
+  },
+  {
+    state: "Rajasthan",
+    region: "Chandigarh",
+    cities: ["Jaipur", "Jodhpur", "Kota", "Udaipur"],
+  },
+  { state: "Sikkim", region: "Kolkata", cities: ["Bardang"] },
+  {
+    state: "Tamil Nadu",
+    region: "Chennai",
+    cities: [
+      "Chennai-Avadi",
+      "Chennai-South",
+      "Coimbatore",
+      "Erode",
+      "Kanchipuram",
+      "Madurai",
+      "Salem",
+      "Thanjavur",
+      "Tiruchirappalli",
+      "Tirunelveli",
+      "Vellore",
+    ],
+  },
+  {
+    state: "Telangana",
+    region: "Hyderabad",
+    cities: ["Hyderabad", "Warangal"],
+  },
+  { state: "Tripura", region: "Kolkata", cities: ["Agartala"] },
+  {
+    state: "Uttar Pradesh",
+    region: "Lucknow",
+    cities: [
+      "Agra",
+      "Allahabad",
+      "Ghaziabad",
+      "Gorakhpur",
+      "Greater Noida",
+      "Kanpur",
+      "Lucknow",
+      "Meerut",
+      "Varanasi",
+    ],
+  },
+  {
+    state: "Uttarakhand",
+    region: "Chandigarh",
+    cities: ["Dehradun", "Haldwani", "Roorkee"],
+  },
+  {
+    state: "West Bengal",
+    region: "Kolkata",
+    cities: ["Asansol", "Adisaptagram", "Durgapur", "Kolkata", "Siliguri"],
+  },
+];
+
+const examRegionKeys = [
+  "Delhi",
+  "Chennai",
+  "Bengaluru",
+  "Hyderabad",
+  "Mumbai",
+  "Kolkata",
+  "Patna",
+  "Chandigarh",
+  "Lucknow",
+];
+
+const examRegionMeta = computed(() =>
+  examRegionKeys.map((key) => {
+    const rows = examCitiesData.filter((row) => row.region === key);
+    const cityCount = rows.reduce((sum, row) => sum + row.cities.length, 0);
+    return {
+      key,
+      emoji: "📍",
+      stateCount: rows.length,
+      cityCount,
+    };
+  }),
+);
+
+function selectExamRegion(region) {
+  activeRegion.value = region;
+}
+
+function resetExamRegion() {
+  activeRegion.value = null;
+}
+
+const filteredExamCities = computed(() => {
+  if (!activeRegion.value) return [];
+  const q = citySearch.value.trim().toLowerCase();
+  return examCitiesData.filter((row) => {
+    if (row.region !== activeRegion.value) return false;
+    if (!q) return true;
+    return (
+      row.state.toLowerCase().includes(q) ||
+      row.cities.some((c) => c.toLowerCase().includes(q))
+    );
+  });
+});
 
 const search = ref("");
 const tabs = ["All Levels", "Foundation", "Diploma", "BS Degree"];
@@ -759,6 +1174,55 @@ const currentSubjectCode = ref(null);
 const currentResourceType = ref("notes");
 const openAuthors = ref({});
 
+const driveLinks = {
+  foundationPyq:
+    "https://drive.google.com/drive/folders/1Fq3vpXmmN3moEFa9TdBqkBfkMfjaPyh-",
+  diplomaPyq:
+    "https://drive.google.com/drive/folders/1FnI9uXbnSGqMBRLWyWPD5839R9xXjS5I",
+  notes: {
+    BSMA1001:
+      "https://drive.google.com/drive/folders/1SuT80Mt_1mhgeDb8_PF5nE2f626wI-5C",
+    BSMA1002:
+      "https://drive.google.com/drive/folders/1TVvNKumzi1tD5rRPR4B_SHfR6KyHXgkv",
+    BSHS1001:
+      "https://drive.google.com/drive/folders/1TJ_i7aNmcKBk_DAA7EmzCKTJ5fEBYWOD",
+    BSCS1001:
+      "https://drive.google.com/drive/folders/15BrCrZ0cBxcOOhDFwavZX9WJnwXu149O",
+    BSMA1003:
+      "https://drive.google.com/drive/folders/1T0Vk5wWuGlhKhCv1qGYnS7T5_mmceeFy",
+    BSMA1004:
+      "https://drive.google.com/drive/folders/1TNS9WHBWUKInU2Jey23DRwzNySeRjB3O",
+    BSHS1002:
+      "https://drive.google.com/drive/folders/1z68X9eGokOfrzlaCKV3v16bSpgInneKd",
+    BSCS1002:
+      "https://drive.google.com/drive/folders/1O7w1hXO6d0uptWs1U4BCMGVEdfSDxNWo",
+    BSCS2001:
+      "https://drive.google.com/drive/folders/1PtqrInqJV0ZcZbis2hFndmOM08lMmoS_",
+    BSCS2005:
+      "https://drive.google.com/drive/folders/1Q-FPcyrurSml35qHizU6An3_c7f8_xie",
+    BSCS2003:
+      "https://drive.google.com/drive/folders/1MbGGvTyRM0-27le2He5TKdhw8HSPfC0j",
+    BSCS2006:
+      "https://drive.google.com/drive/folders/1Pl7g4i6e9HRR5ZQLYaJlbj6BQ-16ZtDK",
+    BSCS2002:
+      "https://drive.google.com/drive/folders/1Pn7Zaa8tfXbXIBbiX9WYg_WcfIVMHCdG",
+    BSSE2001:
+      "https://drive.google.com/drive/folders/1PsMUC0fAMCNVB5HVgZ_TZQC3CWhT5K3g",
+    BSMS2002:
+      "https://drive.google.com/drive/folders/1UTximp3FWwJV6_5nBmJlISPIbzvMu8s0",
+    BSMS2001:
+      "https://drive.google.com/drive/folders/1UIjX4MUeJBQnSJqRnO5XI8SFm50XDPml",
+    BSCS2004:
+      "https://drive.google.com/drive/folders/1ODZY3E2PcsaFrzIHPo5lUhQZaBszZxxS",
+    BSCS2008:
+      "https://drive.google.com/drive/folders/1UIVGGZYEldx98djyOI6aR18ec-07Qies",
+    BSCS2007:
+      "https://drive.google.com/drive/folders/1UFpj7Lauj4l_YvA8U6tR0dqubv4K0gwy",
+    BSSE2002:
+      "https://drive.google.com/drive/folders/1UK3pOkccniwBm1-YfpQgjrEfXFMrOtVy",
+  },
+};
+
 const currentLevelLabel = computed(() => {
   if (currentLevel.value === "foundation") return "🌱 Foundation";
   if (currentLevel.value === "diploma") return "📐 Diploma";
@@ -792,25 +1256,26 @@ function subjectMatchesSearch(subject, query) {
 
 const filteredSubjects = computed(() => {
   const q = search.value.trim().toLowerCase();
-  
+
   let baseSubjects = [];
   if (activeTab.value === "All Levels" && q) {
     // Collect all subjects from all levels for global search
-    ['foundation', 'diploma', 'bs'].forEach(lvl => {
-      (scData[lvl] || []).forEach(sub => {
+    ["foundation", "diploma", "bs"].forEach((lvl) => {
+      (scData[lvl] || []).forEach((sub) => {
         baseSubjects.push({ ...sub, levelKey: lvl });
       });
     });
   } else {
     // Only current level subjects
-    baseSubjects = levelSubjects.value.map(sub => ({ ...sub, levelKey: currentLevel.value }));
+    baseSubjects = levelSubjects.value.map((sub) => ({
+      ...sub,
+      levelKey: currentLevel.value,
+    }));
   }
 
   if (!q) return baseSubjects;
-  
-  return baseSubjects.filter((subject) =>
-    subjectMatchesSearch(subject, q),
-  );
+
+  return baseSubjects.filter((subject) => subjectMatchesSearch(subject, q));
 });
 
 const currentSubject = computed(
@@ -862,13 +1327,38 @@ const groupedNotes = computed(() => {
     if (!map.has(author)) map.set(author, []);
     map.get(author).push(item);
   });
-  return Array.from(map.entries())
+  const groups = Array.from(map.entries())
     .sort((a, b) => {
       if (a[0] === "Unknown") return 1;
       if (b[0] === "Unknown") return -1;
       return a[0].localeCompare(b[0]);
     })
     .map(([author, items]) => ({ author, items }));
+
+  if (currentSubject.value) {
+    const subjectCode = currentSubject.value.code;
+    let driveLink = driveLinks.notes[subjectCode];
+    if (
+      !driveLink &&
+      currentSubject.value.subject &&
+      currentSubject.value.subject.toLowerCase().includes("analytics")
+    ) {
+      driveLink = driveLinks.notes["BSMS2002"];
+    }
+    if (driveLink) {
+      groups.unshift({
+        author: "Google Drive Folder",
+        items: [
+          {
+            title: `Subject Wise Notes - ${currentSubject.value.subject}`,
+            link: driveLink,
+          },
+        ],
+      });
+    }
+  }
+
+  return groups;
 });
 
 const groupedPyq = computed(() => {
@@ -879,13 +1369,41 @@ const groupedPyq = computed(() => {
     if (!map.has(year)) map.set(year, []);
     map.get(year).push(item);
   });
-  return Array.from(map.entries())
+  const groups = Array.from(map.entries())
     .sort((a, b) => {
       if (a[0] === "Other") return 1;
       if (b[0] === "Other") return -1;
       return Number(b[0]) - Number(a[0]);
     })
     .map(([year, items]) => ({ year, items }));
+
+  if (currentSubject.value) {
+    const subjectCode = currentSubject.value.code;
+    const isFoundation =
+      currentLevel.value === "foundation" ||
+      (String(subjectCode).startsWith("BS") &&
+        String(subjectCode).includes("10"));
+    const isDiploma =
+      currentLevel.value === "diploma" ||
+      (String(subjectCode).startsWith("BS") &&
+        String(subjectCode).includes("20"));
+
+    if (isFoundation) {
+      groups.unshift({
+        year: "Google Drive Folder",
+        items: [
+          { title: "Foundation End term PYQs", link: driveLinks.foundationPyq },
+        ],
+      });
+    } else if (isDiploma) {
+      groups.unshift({
+        year: "Google Drive Folder",
+        items: [{ title: "Diploma ET PYQs", link: driveLinks.diplomaPyq }],
+      });
+    }
+  }
+
+  return groups;
 });
 
 function toggleAuthor(index) {
@@ -1159,33 +1677,120 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.sc-levels-grid {
+/* ─── Two-column layout ───────────────────────────────────── */
+.sc-layout {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: 280px 1fr;
+  gap: 1.75rem;
+  align-items: start;
 }
 
-.sc-mid-search-wrap {
-  margin-top: 2.25rem;
-  padding-top: 1.1rem;
-  border-top: 1px solid rgba(212, 160, 23, 0.16);
-}
-
-.sc-mid-search-row {
+/* ─── Left sidebar ────────────────────────────────────────── */
+.sc-sidebar {
   display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: sticky;
+  top: 100px;
+}
+
+.sc-sidebar-hdr {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(212, 160, 23, 0.15);
+  margin-bottom: 0.25rem;
+  flex-shrink: 0;
+}
+
+.sc-sidebar-cards {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+}
+
+.sc-sidebar-card {
+  background: var(--surface);
+  border: 1px solid rgba(212, 160, 23, 0.15);
+  border-radius: 14px;
+  padding: 1.6rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sc-sidebar-card:hover {
+  border-color: rgba(212, 160, 23, 0.4);
+  background: rgba(212, 160, 23, 0.04);
+}
+
+.sc-sidebar-card.active {
+  border-color: var(--accent);
+  background: rgba(212, 160, 23, 0.07);
+  box-shadow: 0 0 0 2px rgba(212, 160, 23, 0.2);
+}
+
+.sc-sidebar-card.active .sc-sidebar-arrow {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+
+.sc-sidebar-card-top {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.sc-sidebar-emoji {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 0.1rem;
+}
+
+.sc-sidebar-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.sc-sidebar-card .sc-card-title {
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.sc-sidebar-card .sc-card-desc {
+  font-size: 0.75rem;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.sc-sidebar-arrow {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  color: var(--text3);
+  transition: all 0.2s;
+}
+
+/* ─── Right panel ─────────────────────────────────────────── */
+.sc-panel-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sc-panel-search {
+  margin-bottom: 0;
+  flex-shrink: 0;
 }
 
 .sc-search-input-wrap {
-  flex: 1;
-  min-width: 240px;
   position: relative;
+  max-width: 420px;
 }
 
 .sc-mid-search-input {
+  width: 100%;
   padding-left: 2.5rem;
 }
 
@@ -1195,10 +1800,72 @@ onMounted(async () => {
   top: 50%;
   transform: translateY(-50%);
   color: var(--text2);
+  pointer-events: none;
 }
 
-.sc-mid-tabs {
-  margin: 0;
+.sc-panel-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 580px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  text-align: center;
+  padding: 3rem;
+  color: var(--text3);
+}
+
+/* Wrapper that holds strip + resource panel as one fixed box */
+.sc-panel-body {
+  display: flex;
+  flex-direction: column;
+  height: 580px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Subject strip: fixed top, no scroll */
+.sc-subject-strip {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1.25rem 1.5rem;
+  flex-shrink: 0;
+}
+
+/* Resource panel: fills remaining height, scrollable */
+.sc-resource-panel {
+  background: var(--surface);
+  padding: 1.5rem 2rem;
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 160, 23, 0.3) transparent;
+}
+
+.sc-resource-panel::-webkit-scrollbar {
+  width: 5px;
+}
+.sc-resource-panel::-webkit-scrollbar-thumb {
+  background: rgba(212, 160, 23, 0.3);
+  border-radius: 99px;
+}
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .sc-layout {
+    grid-template-columns: 1fr;
+  }
+  .sc-sidebar {
+    position: static;
+  }
+  .sc-sidebar-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .sc-level-card {
@@ -1256,13 +1923,6 @@ onMounted(async () => {
   font-size: 0.82rem;
   padding: 0.5rem 1.1rem;
   pointer-events: none;
-}
-
-.sc-subject-strip {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px 16px 0 0;
-  padding: 1.25rem 1.5rem;
 }
 
 .sc-strip-header {
@@ -1441,6 +2101,29 @@ onMounted(async () => {
   font-size: 0.8rem;
 }
 
+.db-scroll-box {
+  max-width: 820px;
+  margin: 0 auto 3rem;
+  height: 560px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 160, 23, 0.3) transparent;
+}
+
+.db-scroll-box::-webkit-scrollbar {
+  width: 5px;
+}
+.db-scroll-box::-webkit-scrollbar-thumb {
+  background: rgba(212, 160, 23, 0.3);
+  border-radius: 99px;
+}
+
 .db-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -1519,14 +2202,8 @@ onMounted(async () => {
   color: var(--text);
 }
 
-@media (max-width: 900px) {
-  .sc-levels-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 768px) {
-  .sc-levels-grid {
+  .sc-sidebar-cards {
     grid-template-columns: 1fr;
   }
 
@@ -1537,6 +2214,206 @@ onMounted(async () => {
 
   .sc-contrib-grid {
     grid-template-columns: 1fr !important;
+  }
+}
+
+/* ─── Exam Cities ───────────────────────────────────────────────────── */
+
+/* Region sidebar + panel (mirrors the Study Corner level picker above) */
+.ec-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.75rem;
+  align-items: start;
+}
+
+.ec-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 580px;
+  gap: 0.75rem;
+}
+
+.ec-sidebar-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 160, 23, 0.3) transparent;
+}
+
+.ec-sidebar-cards::-webkit-scrollbar {
+  width: 5px;
+}
+.ec-sidebar-cards::-webkit-scrollbar-thumb {
+  background: rgba(212, 160, 23, 0.3);
+  border-radius: 99px;
+}
+
+.ec-sidebar-card {
+  background: var(--surface);
+  border: 1px solid rgba(212, 160, 23, 0.15);
+  border-radius: 14px;
+  padding: 1.4rem 1.3rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ec-sidebar-card:hover {
+  border-color: rgba(212, 160, 23, 0.4);
+  background: rgba(212, 160, 23, 0.04);
+}
+
+.ec-sidebar-card.active {
+  border-color: var(--accent);
+  background: rgba(212, 160, 23, 0.07);
+  box-shadow: 0 0 0 2px rgba(212, 160, 23, 0.2);
+}
+
+.ec-sidebar-card.active .ec-sidebar-arrow {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+
+.ec-sidebar-card-top {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  margin-bottom: 0.85rem;
+}
+
+.ec-sidebar-emoji {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.ec-sidebar-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.ec-sidebar-arrow {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  color: var(--text3);
+  transition: all 0.2s;
+}
+
+.ec-panel-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 580px;
+}
+
+/* Fixed-height box for the cities side: header stays put, list scrolls */
+.ec-panel-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.ec-strip-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ec-cities-scroll {
+  background: var(--surface);
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem 2rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 160, 23, 0.3) transparent;
+}
+
+.ec-cities-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.ec-cities-scroll::-webkit-scrollbar-thumb {
+  background: rgba(212, 160, 23, 0.3);
+  border-radius: 99px;
+}
+
+@media (max-width: 900px) {
+  .ec-layout {
+    grid-template-columns: 1fr;
+  }
+  .ec-sidebar-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ec-sidebar-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ec-card {
+  padding: 1.1rem 1.25rem;
+}
+
+.ec-state {
+  font-family: Cinzel, serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(212, 160, 23, 0.15);
+}
+
+.ec-cities-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ec-city-tag {
+  font-size: 0.72rem;
+  background: rgba(212, 160, 23, 0.06);
+  border: 1px solid rgba(212, 160, 23, 0.15);
+  color: var(--text2);
+  padding: 0.18rem 0.55rem;
+  border-radius: 99px;
+}
+
+.ec-info-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.ec-info-card {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .ec-info-row {
+    grid-template-columns: 1fr;
   }
 }
 </style>
