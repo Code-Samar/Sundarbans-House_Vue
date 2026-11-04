@@ -1,18 +1,3 @@
-Sundarbans-House
-A centralized platform for managing events, resources, team collaboration, and digital initiatives of Sundarbans House.
-
-<img width="1432" height="783" alt="Screenshot 2026-04-02 at 10 53 46" src="https://github.com/user-attachments/assets/04fef05d-a7f3-4fe1-8ef9-20a104ec3600" />
-
-
-<img width="1470" height="803" alt="Screenshot 2026-04-15 at 11 50 18" src="https://github.com/user-attachments/assets/65d285ed-e47b-4ba9-ac84-96444b8f1f2d" />
-
-
-<img width="1470" height="728" alt="Screenshot 2026-04-02 at 10 57 30" src="https://github.com/user-attachments/assets/890ea9bb-9ed4-4cb8-b451-e50d6f2c563f" />
-
-<img width="1111" height="677" alt="Screenshot 2026-04-15 at 11 51 30" src="https://github.com/user-attachments/assets/bfa0416c-d0cc-4473-ba4e-94eee8d91757" />
-
-<img width="1470" height="434" alt="Screenshot 2026-04-15 at 11 52 05" src="https://github.com/user-attachments/assets/713db9a5-2d45-4e5b-b52f-4f247284ec49" />
-
 # Sundarbans House — IIT Madras BS Degree
 
 A centralized community platform for **Sundarbans House** of the IIT Madras BS Degree programme. The website brings together house information, events, meetups, study resources, teams, community activities and member-facing tools in one place.
